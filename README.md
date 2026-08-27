@@ -2,9 +2,10 @@
 
 A job and contract search you run as a loop instead of a panic. It is a skill for
 an AI coding assistant plus a local HTML dashboard. Nothing to sign up for, no
-server, no subscription, no third-party job-search service. Your files stay in
-your folder, and your CV goes to whatever assistant you install this into, the
-same as anything else you hand it.
+server, and no subscription needed: it runs on free channels, and uses a paid
+source only where you already pay for one. Your files stay in your folder, and
+your CV goes to whatever assistant you install this into, the same as anything
+else you hand it.
 
 Open `index.html` for the same thing as a page you can read in a browser.
 
@@ -115,6 +116,7 @@ drop the run file on it.
 | `references/scoring-rubric.md` | Six dimensions, calibration bands, what never gets filtered |
 | `references/apply-pack.md` | Adversarial fit review, tailored résumé, cover letter brief |
 | `references/compensation.md` | How to research a real salary band before answering |
+| `references/keyed-sources.md` | Optional: using a paid job-data API you already pay for |
 | `references/answer-bank.md` | Reusable interview and application answers |
 | `references/interview-prep.md` | Per-interview prep and the one-pager |
 | `references/contract-track.md` | Contract outreach |

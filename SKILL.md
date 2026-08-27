@@ -30,7 +30,9 @@ Three things in one folder. Default `~/job-hunt/`, anywhere works.
 `dashboard.html` opens in a browser with no server and no install. Drop a run
 file on it to see the shortlist; it tracks status per posting from there.
 
-No account, no API key, no database. If the folder is in a private git repo,
+No account, no database, and no key required. Where the person already pays for
+a source that has an API, the search uses it: `references/keyed-sources.md`,
+which is optional and never a default. If the folder is in a private git repo,
 the whole search is versioned and portable.
 
 ## First run: the intake
@@ -251,9 +253,14 @@ the posted role is a poor fit.
    has to survive the interview it gets the person into.
 3. **Personal data stays local.** The profile, the CV, and the pipeline live in
    the person's folder. Do not post them anywhere.
-4. **Plain language.** In anything the person reads: "searching", "found",
+4. **Never print, echo or return an API key.** Keys live in the environment, per
+   `references/keyed-sources.md`, and never in `profile.md`, a run file, or the
+   dashboard. When one is missing, the whole answer is "set `FOORILLA_API_KEY`
+   in your job-hunt env file", not a hunt for it. An absent key degrades to the
+   free channels silently.
+5. **Plain language.** In anything the person reads: "searching", "found",
    "strong match", "apply". Jargon in a verdict is a small failure of respect.
-5. **Say when the search came up short.** Three real roles is a result. Twenty
+6. **Say when the search came up short.** Three real roles is a result. Twenty
    padded ones is a waste of their week.
 
 ## Weekly scoreboard

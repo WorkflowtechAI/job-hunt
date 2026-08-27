@@ -125,6 +125,10 @@ Record these once so no future run re-litigates them.
 - Weekly application target, set from those hours rather than from ambition.
 - Whether contract outreach runs alongside, and at what volume.
 - Which day the weekly review happens.
+- Whether they already pay for a job-data source that has an API. **This is the
+  one and only time to ask.** Yes: `keyed-sources.md` says where the key goes.
+  No, or unsure: move on and never raise it again. The search runs on free
+  channels, and a paid source is nobody's default.
 
 Fifteen tailored applications beat forty pasted ones, and take less time, because
 the forty produce forty rejections to read.

@@ -69,9 +69,12 @@ Foorilla also publishes an **AI/ML and Big Data salary dataset** on GitHub under
 CC0, a weekly snapshot of survey responses from 2021 onward, at
 `https://raw.githubusercontent.com/foorilla/ai-jobs-net-salaries/main/salaries.csv`.
 Public domain, no key, useful as a comp benchmark by title, level, location and
-remote ratio. Their paid job-data API is a separate product, and as of 2026-08-27
-its documented hostname `jobdata.foorilla.com` does not resolve, so treat it as
-unavailable until it comes back rather than as part of the loop.
+remote ratio.
+
+They also sell API access to the same listings, behind a paid subscription. It is
+optional, it is not part of the loop, and the free export above is enough.
+Where someone already pays for it, `keyed-sources.md` covers how the key is
+supplied and how any keyed source has to behave.
 
 Find the equivalent board for the person's field and add it to the profile.
 RemoteOK and the remote-first boards fill the same slot for location rather than
