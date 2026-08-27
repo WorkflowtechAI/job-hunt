@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Job Hunt: what this is and how to set it up</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff; --panel: #f6f7f9; --panel-2: #eef0f4; --line: #d9dde5;
+    --ink: #14181f; --ink-2: #545c6b; --ink-3: #7b8494;
+    --accent: #2a5bd7; --on-accent: #ffffff; --good-bg: #e2f3ea; --good: #17724a;
+    --warn-bg: #fbf0da; --warn: #8a5a00; --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1116; --panel: #161a21; --panel-2: #1d222b; --line: #2a313d;
+      --ink: #e8ebf1; --ink-2: #a3acbb; --ink-3: #77808f;
+      --accent: #7ba0ff; --on-accent: #0f1116; --good-bg: #14301f; --good: #7fd8a8;
+      --warn-bg: #33270f; --warn: #f0c274;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font: 16px/1.65 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 44px 22px 90px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.92em; }
+  h1 { font-size: 31px; letter-spacing: -0.025em; margin: 0 0 6px; }
+  h2 { font-size: 20px; letter-spacing: -0.015em; margin: 42px 0 12px; }
+  h3 { font-size: 16px; margin: 26px 0 6px; }
+  .lede { font-size: 18px; color: var(--ink-2); margin: 0 0 8px; }
+  p { margin: 0 0 14px; }
+  a { color: var(--accent); }
+  code {
+    font-family: ui-monospace, Consolas, monospace; font-size: 0.88em;
+    background: var(--panel-2); border-radius: 5px; padding: 1.5px 5px;
+  }
+  pre {
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 14px 16px; overflow-x: auto;
+    font: 13px/1.6 ui-monospace, Consolas, monospace;
+  }
+  pre code { background: none; padding: 0; }
+  hr { border: 0; border-top: 1px solid var(--line); margin: 40px 0; }
+
+  .cta {
+    display: inline-block; text-decoration: none; font-weight: 600;
+    background: var(--accent); color: var(--on-accent); border-radius: 9px; padding: 11px 20px;
+    margin: 6px 0 18px;
+  }
+  .steps { counter-reset: s; list-style: none; padding: 0; margin: 0; }
+  .steps > li {
+    counter-increment: s; position: relative; padding: 0 0 0 46px; margin-bottom: 22px;
+  }
+  .steps > li::before {
+    content: counter(s); position: absolute; left: 0; top: 1px;
+    width: 30px; height: 30px; border-radius: 50%;
+    background: var(--panel-2); border: 1px solid var(--line); color: var(--ink-2);
+    font: 600 14px/29px ui-monospace, Consolas, monospace; text-align: center;
+  }
+  /* Only the leading label is its own line; bold inside the prose stays inline. */
+  .steps > li > b:first-child { display: block; }
+  .box {
+    background: var(--panel); border: 1px solid var(--line);
+    border-radius: var(--radius); padding: 16px 18px; margin: 0 0 16px;
+  }
+  .box.good { background: var(--good-bg); border-color: transparent; }
+  .box.warn { background: var(--warn-bg); border-color: transparent; }
+  .box h3 { margin-top: 0; }
+  .box p:last-child, ul:last-child { margin-bottom: 0; }
+  table { border-collapse: collapse; width: 100%; font-size: 15px; margin: 0 0 16px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-size: 12px; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-3); }
+  ul { margin: 0 0 14px; padding-left: 22px; }
+  li { margin-bottom: 6px; }
+  footer { margin-top: 50px; padding-top: 18px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 14px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Job hunt</h1>
+  <p class="lede">A job and contract search you run as a loop instead of a panic.
+    Built as a skill for an AI coding assistant, with a local dashboard and
+    nothing to sign up for: no server, no subscription, no third-party
+    job-search service anywhere in it.</p>
+
+  <p>You bring your CV and fifteen minutes. It builds a profile, then each run
+    sources roles across the places worth looking, scores every one of them
+    against that profile, checks the links are still alive, and hands you a ranked
+    shortlist with a plain-English verdict on each. You decide what to do with it.
+    It never applies to anything on your behalf.</p>
+
+  <a class="cta" href="dashboard.html">Open the dashboard</a>
+  <p class="mono" style="color:var(--ink-3)">Try "See an example" on that page to
+    look around before you have any data.</p>
+
+  <h2>How a run works</h2>
+  <ol class="steps">
+    <li><b>Once: the intake.</b> Your assistant reads your CV, then asks what the
+      CV cannot tell it. Where you can legally work. What you would turn down.
+      Your floor. The numbers you can defend. It writes
+      <code>profile.md</code>, which you can edit any time. This is the part that
+      decides whether the search is any good.</li>
+    <li><b>Weekly: the search.</b> Say "refresh my jobs". It works down the
+      sourcing map: employer career pages and ATS boards first, then talent and
+      contract platforms, niche boards, then aggregators and your own job-alert
+      emails. It scores each role 0 to 100, opens every posting to confirm it is
+      still live, and writes <code>runs/2026-08-27.json</code>.</li>
+    <li><b>You: decide.</b> Drop the run file on the dashboard. Set a status per
+      role as you go. Hit <b>Apply pack</b> on the ones you want. Review the
+      scoreboard on Friday.</li>
+  </ol>
+
+  <h2>The apply pack</h2>
+  <p>For each role you actually pick, before anything gets written, five hostile
+    readers go at your résumé against that job description:</p>
+  <ul>
+    <li><b>The six-second screen.</b> A recruiter with ninety résumés reads your
+      top third and nothing else. Does it pass?</li>
+    <li><b>The keyword filter.</b> Every concrete term the posting names, marked
+      present, present in different words, or absent. Only true things get added.</li>
+    <li><b>The hostile hiring manager.</b> Every bullet asked "how?" and "by how
+      much?" until one of them cannot answer.</li>
+    <li><b>The comparison.</b> Against the likely pool for this job, what is
+      genuinely rare on your résumé, and what is on everyone's.</li>
+    <li><b>The gap hunter.</b> The employment gap, the short stint, the pivot, the
+      missing credential. What they will ask, and whether you address it on the
+      résumé, in the letter, or in the room.</li>
+  </ul>
+  <p>It ends with a call, and <em>skip this one</em> is a real answer. Then you get
+    a <b>tailored résumé</b> for that posting, built by reordering, rewording and
+    cutting your real one, never by inventing anything, with a list of what
+    changed and why.</p>
+
+  <div class="box">
+    <h3>And a cover letter brief, not a cover letter</h3>
+    <p>You get the points to hit, in order, each with the evidence attached: the
+      opening angle, what to address head-on, what to leave out, and which of the
+      posting's own words are worth echoing. Everything a letter needs except the
+      sentences.</p>
+    <p>Those are yours to write. A letter in a voice that is not yours gets read
+      back to you in the interview by someone who assumes you wrote it. Hand the
+      brief to your own writing tooling if you have some, or spend the fifteen
+      minutes. The hard part was the thinking, and the brief has already done it.</p>
+  </div>
+
+  <h2>What is in the box</h2>
+  <table>
+    <tr><th>File</th><th>What it does</th></tr>
+    <tr><td class="mono">SKILL.md</td><td>The doctrine your assistant loads: the search loop, the run format, the link-hygiene rules, the guardrails</td></tr>
+    <tr><td class="mono">dashboard.html</td><td>The shortlist and the application pipeline. Opens from your filesystem, keeps nothing anywhere else</td></tr>
+    <tr><td class="mono">references/intake.md</td><td>The guided intake that builds your profile</td></tr>
+    <tr><td class="mono">references/profile-template.md</td><td>The profile the intake fills in</td></tr>
+    <tr><td class="mono">references/sourcing-map.md</td><td>Where to look, in priority order, and the rule for each channel</td></tr>
+    <tr><td class="mono">references/scoring-rubric.md</td><td>The six dimensions, the calibration bands, and what never gets filtered out</td></tr>
+    <tr><td class="mono">references/apply-pack.md</td><td>Per role you pick: an adversarial fit review from five hostile readers, a tailored résumé, and a brief of what your cover letter should hit</td></tr>
+    <tr><td class="mono">references/compensation.md</td><td>How to research a real salary band before you answer the question</td></tr>
+    <tr><td class="mono">references/answer-bank.md</td><td>Your reusable interview and form answers, built once</td></tr>
+    <tr><td class="mono">references/interview-prep.md</td><td>Per-interview prep, and the one-pager you read ten minutes before</td></tr>
+    <tr><td class="mono">references/contract-track.md</td><td>Engagements you propose to companies that never posted a job</td></tr>
+  </table>
+
+  <h2>Setup</h2>
+  <p>Two minutes for the skill, then fifteen for the intake.</p>
+
+  <h3>1. Install the skill</h3>
+  <p>Clone it straight into your assistant's skills directory. For Claude Code
+    that is:</p>
+  <pre><code># macOS / Linux
+mkdir -p ~/.claude/skills
+git clone https://github.com/WorkflowtechAI/job-hunt.git ~/.claude/skills/job-hunt
+
+# Windows PowerShell
+New-Item -ItemType Directory -Force "$HOME\.claude\skills" | Out-Null
+git clone https://github.com/WorkflowtechAI/job-hunt.git "$HOME\.claude\skills\job-hunt"</code></pre>
+  <p><code>git pull</code> in that folder later picks up changes. No git:
+    download the ZIP from GitHub and unpack it so that
+    <code>~/.claude/skills/job-hunt/SKILL.md</code> exists. Watch that step,
+    because unpacking one level off is the one install mistake that fails
+    silently.</p>
+  <p>Restart the session, ask "what skills do you have?", and you should see
+    <code>job-hunt</code> listed. Other assistants that read a skills or
+    instructions folder work the same way; point yours at
+    <code>SKILL.md</code>.</p>
+
+  <h3>2. Make your folder</h3>
+  <pre><code>mkdir -p ~/job-hunt/runs
+cp ~/.claude/skills/job-hunt/dashboard.html ~/job-hunt/</code></pre>
+  <p>Anywhere works, that is just the default. A private git repo is a good home
+    for it: your whole search, versioned, and portable to a new machine.</p>
+
+  <h3>3. Run the intake</h3>
+  <p>Point your assistant at your CV and say <em>"run the job-hunt intake"</em>.
+    Answer the questions. It writes <code>~/job-hunt/profile.md</code> at the end,
+    which is plain markdown you can edit whenever anything changes.</p>
+
+  <h3>4. First search</h3>
+  <p>Say <em>"refresh my jobs"</em>. Expect it to take a while: the sourcing is
+    wide and every posting gets opened and checked. Then open the dashboard and
+    drop the run file on it.</p>
+
+  <div class="box good">
+    <h3>Where the person you are working with matters</h3>
+    <p>The intake asks two uncomfortable questions on purpose: your real salary
+      floor, and an honest account of what you have actually shipped. Both are
+      load-bearing. A profile that is polite about them produces a search that
+      wastes your week.</p>
+  </div>
+
+  <h2>What it will not do</h2>
+  <ul>
+    <li><b>It never applies for you.</b> A run produces a shortlist and stops. You
+      click every apply link and you send every message. This is not a limitation
+      to be worked around; it is the design.</li>
+    <li><b>It never invents a claim.</b> No borrowed projects, no rounded-up
+      numbers, no credential-in-progress described as held. Everything in a letter
+      has to survive the interview it gets you.</li>
+    <li><b>It never ships your data anywhere of its own.</b> The profile, the CV,
+      the runs and the pipeline are files in your folder, and the dashboard uses
+      your browser's local storage with no network code in it at all. Your
+      assistant still sends what it reads to its model provider, so install this
+      into one you would trust with a résumé.</li>
+    <li><b>It never sends you to a job you have to pay to read.</b> Boards that
+      charge job seekers to view or apply get traced back to the employer's own
+      posting, or dropped.</li>
+    <li><b>It never quietly bins a role.</b> A posting it could not confirm shows
+      up labeled unconfirmed rather than disappearing, because you can judge a
+      flagged role and you cannot judge one you never saw.</li>
+  </ul>
+
+  <div class="box warn">
+    <h3>The honest part</h3>
+    <p>This is a search that works, not a machine that gets you hired. A good run
+      surfaces two or three roles genuinely worth an application, and a thin week
+      surfaces none. It will tell you that instead of padding the list, which is
+      the whole reason the list stays worth reading.</p>
+    <p>The work you still have to do: the interviews, the follow-ups, the
+      decisions, and about ten minutes of tailoring per application. What you get
+      back is the sourcing, the ranking, the paperwork, and a process that does
+      not fall apart in week three.</p>
+  </div>
+
+  <h2>Using it week to week</h2>
+  <table>
+    <tr><th>Say this</th><th>You get</th></tr>
+    <tr><td>"refresh my jobs"</td><td>A full search run and a new shortlist</td></tr>
+    <tr><td>"am I a fit for this?" <span class="mono">+ url</span></td><td>One posting scored against your profile, with the gaps named</td></tr>
+    <tr><td>"apply pack for the Northwind role"</td><td>Adversarial review, tailored résumé, and a brief of what the letter must hit</td></tr>
+    <tr><td>"prep me for Thursday's interview"</td><td>A prep document and a one-page sheet</td></tr>
+    <tr><td>"draft openers for this week"</td><td>Contract outreach, for your review, unsent</td></tr>
+    <tr><td>"weekly scoreboard"</td><td>Applications, replies, interviews, and what to change</td></tr>
+  </table>
+
+  <hr>
+
+  <footer>
+    Built by <a href="https://workflowtech.ai">David Braun</a> for a real job and
+    contract search, then generalized so it does not need to be his. The rules in
+    it that look oddly specific are the ones that came from a run that failed: an
+    employer's name replaced by an aggregator's, a shortlist of dead links, a good
+    role buried by a scoring rule that was trying to help.
+    <br><br>
+    MIT licensed. Source at
+    <a href="https://github.com/WorkflowtechAI/job-hunt">github.com/WorkflowtechAI/job-hunt</a>.
+  </footer>
+</div>
+</body>
+</html>

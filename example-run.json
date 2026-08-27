@@ -1,0 +1,93 @@
+{
+  "date": "2026-08-27",
+  "track": "both",
+  "focus": "Example run. Every field the dashboard reads appears at least once.",
+  "postings": [
+    {
+      "title": "Forward Deployed Engineer",
+      "company": "Northwind Systems",
+      "url": "https://example.com/jobs/fde",
+      "location": "Remote (US)",
+      "salary": "$150,000 - $190,000",
+      "jobType": "Full-time",
+      "employmentType": "w2",
+      "score": 84,
+      "verdict": "Strong match. They want the discovery-to-rollout work you already do, and they name your stack.",
+      "strengths": [
+        "Owns proof of concept through production, which is the job you have held twice",
+        "Names the tools you use daily in the first three bullets"
+      ],
+      "gaps": [
+        "Wants Kubernetes depth you do not have",
+        "Remote is likely US-residence, so ask early"
+      ],
+      "locationFit": "us-remote",
+      "sourceType": "company-site",
+      "postedAt": "2026-08-24",
+      "postedDaysAgo": 3,
+      "live": true
+    },
+    {
+      "title": "Automation Consultant",
+      "company": "Halvorsen Group",
+      "url": "https://example.com/jobs/automation",
+      "location": "Anywhere",
+      "salary": "$95 - $120 / hour",
+      "jobType": "Contract",
+      "employmentType": "contract",
+      "score": 71,
+      "verdict": "Good contract fit and billable from anywhere. Scope is vague, so ask what the first project actually is.",
+      "strengths": [
+        "Exactly the integration work you have shipped for two clients"
+      ],
+      "gaps": [
+        "No named end client",
+        "Rate sits below your target band, though above your floor"
+      ],
+      "locationFit": "global",
+      "sourceType": "job-board",
+      "postedAt": "2026-08-18",
+      "postedDaysAgo": 9,
+      "live": true
+    },
+    {
+      "title": "Platform Engineer",
+      "company": "Cedarline",
+      "url": "https://example.com/jobs/platform",
+      "location": "Austin, TX",
+      "salary": "",
+      "jobType": "Full-time",
+      "employmentType": "w2",
+      "score": 41,
+      "verdict": "Onsite in Austin, and only confirmed on the board that sent the alert. Visible so you can judge it, not recommended.",
+      "strengths": [
+        "Infrastructure work is adjacent to what you do"
+      ],
+      "gaps": [
+        "Requires relocation",
+        "Could not confirm on the employer's own careers page"
+      ],
+      "locationFit": "onsite",
+      "sourceType": "alert-only",
+      "postedDaysAgo": 34,
+      "live": true
+    },
+    {
+      "title": "Solutions Architect",
+      "company": "Pinegrove Data",
+      "url": "https://example.com/jobs/expired",
+      "location": "Remote (EU)",
+      "salary": "€90,000 - €110,000",
+      "jobType": "Full-time",
+      "employmentType": "w2",
+      "score": 76,
+      "verdict": "Closed. The posting 404s, so the dashboard drops it and the count of dropped roles goes in the run note.",
+      "strengths": [],
+      "gaps": [],
+      "locationFit": "global",
+      "sourceType": "company-site",
+      "postedDaysAgo": 41,
+      "live": false
+    }
+  ]
+}

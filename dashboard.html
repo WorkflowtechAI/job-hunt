@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<title>Job Hunt Dashboard</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --panel: #f6f7f9;
+    --panel-2: #eef0f4;
+    --line: #d9dde5;
+    --ink: #14181f;
+    --ink-2: #545c6b;
+    --ink-3: #7b8494;
+    --accent: #2a5bd7;
+    --on-accent: #ffffff;
+    --good: #17724a;
+    --good-bg: #e2f3ea;
+    --ok-bg: #e4ebfb;
+    --warn: #8a5a00;
+    --warn-bg: #fbf0da;
+    --mute-bg: #e9ebf0;
+    --radius: 10px;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1116;
+      --panel: #161a21;
+      --panel-2: #1d222b;
+      --line: #2a313d;
+      --ink: #e8ebf1;
+      --ink-2: #a3acbb;
+      --ink-3: #77808f;
+      --accent: #7ba0ff;
+      --on-accent: #0f1116;
+      --good: #7fd8a8;
+      --good-bg: #14301f;
+      --ok-bg: #17223c;
+      --warn: #f0c274;
+      --warn-bg: #33270f;
+      --mute-bg: #222833;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 80px; }
+  h1 { font-size: 22px; margin: 0 0 2px; letter-spacing: -0.01em; }
+  .sub { color: var(--ink-2); font-size: 14px; margin: 0 0 22px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+
+  /* intake / load */
+  #load {
+    border: 1.5px dashed var(--line); border-radius: var(--radius);
+    background: var(--panel); padding: 22px; text-align: center; margin-bottom: 22px;
+  }
+  #load.drag { border-color: var(--accent); background: var(--ok-bg); }
+  #load p { margin: 0 0 12px; color: var(--ink-2); }
+  .btnrow { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; }
+  button, .btn {
+    font: inherit; font-size: 14px; cursor: pointer;
+    background: var(--panel-2); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; padding: 7px 13px;
+  }
+  button:hover, .btn:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  textarea {
+    width: 100%; min-height: 130px; margin-top: 12px; padding: 10px;
+    font: 13px/1.5 ui-monospace, Consolas, monospace;
+    background: var(--bg); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; resize: vertical;
+  }
+
+  /* scoreboard */
+  .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(118px, 1fr)); gap: 10px; margin-bottom: 18px; }
+  .tile { background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius); padding: 12px 14px; }
+  .tile b { display: block; font-size: 25px; font-weight: 650; letter-spacing: -0.02em; }
+  .tile span { font-size: 11px; text-transform: uppercase; letter-spacing: 0.07em; color: var(--ink-3); }
+
+  /* controls */
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 10px; align-items: center;
+    background: var(--panel); border: 1px solid var(--line); border-radius: var(--radius);
+    padding: 12px 14px; margin-bottom: 18px;
+  }
+  .controls label { font-size: 12px; color: var(--ink-2); display: flex; align-items: center; gap: 6px; }
+  select, input[type="search"] {
+    font: inherit; font-size: 14px; padding: 5px 8px;
+    background: var(--bg); color: var(--ink); border: 1px solid var(--line); border-radius: 7px;
+  }
+  input[type="search"] { min-width: 170px; }
+  input[type="range"] { width: 110px; accent-color: var(--accent); }
+  .spacer { flex: 1 1 auto; }
+
+  /* postings */
+  .card {
+    border: 1px solid var(--line); border-radius: var(--radius);
+    background: var(--panel); padding: 14px 16px; margin-bottom: 10px;
+    display: grid; grid-template-columns: 52px 1fr auto; gap: 14px; align-items: start;
+  }
+  .card.done { opacity: 0.55; }
+  .score {
+    font: 650 19px/1 ui-monospace, Consolas, monospace;
+    border-radius: 8px; padding: 9px 0; text-align: center; border: 1px solid transparent;
+  }
+  .s-hi { background: var(--good-bg); color: var(--good); }
+  .s-ok { background: var(--ok-bg); color: var(--accent); }
+  .s-mid { background: var(--warn-bg); color: var(--warn); }
+  .s-lo { background: var(--mute-bg); color: var(--ink-3); }
+  .title { font-weight: 620; font-size: 16px; letter-spacing: -0.01em; }
+  .company { color: var(--ink-2); font-size: 14px; margin: 1px 0 7px; }
+  .verdict { margin: 0 0 9px; }
+  .badges { display: flex; flex-wrap: wrap; gap: 5px; margin-bottom: 8px; }
+  .badge {
+    font: 11px/1 ui-monospace, Consolas, monospace; text-transform: uppercase; letter-spacing: 0.05em;
+    background: var(--panel-2); color: var(--ink-2);
+    border: 1px solid var(--line); border-radius: 5px; padding: 4px 6px;
+  }
+  .badge.flag { background: var(--warn-bg); color: var(--warn); border-color: transparent; }
+  details summary { cursor: pointer; font-size: 13px; color: var(--ink-2); }
+  details ul { margin: 7px 0 0; padding-left: 20px; font-size: 14px; }
+  .side { display: flex; flex-direction: column; gap: 7px; align-items: stretch; min-width: 130px; }
+  .side a.btn { text-align: center; text-decoration: none; background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  .side a.btn.dead { background: var(--mute-bg); border-color: var(--line); color: var(--ink-3); pointer-events: none; }
+  .empty { text-align: center; color: var(--ink-3); padding: 44px 20px; }
+  footer { margin-top: 26px; padding-top: 16px; border-top: 1px solid var(--line); color: var(--ink-3); font-size: 13px; }
+  .note { color: var(--ink-3); font-size: 13px; margin: 0 0 14px; }
+  .hidden { display: none; }
+  @media (max-width: 640px) {
+    .card { grid-template-columns: 46px 1fr; }
+    .side { grid-column: 1 / -1; flex-direction: row; }
+    .side > * { flex: 1; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <h1>Job hunt</h1>
+  <p class="sub">The shortlist from your latest run, and where each application stands.
+     Everything stays in this browser. Nothing is uploaded anywhere.</p>
+
+  <section id="load">
+    <p><strong>Drop a run file here</strong> (<span class="mono">runs/2026-08-27.json</span>), or:</p>
+    <div class="btnrow">
+      <button type="button" id="pick">Choose file</button>
+      <button type="button" id="paste-toggle">Paste JSON</button>
+      <button type="button" id="demo">See an example</button>
+    </div>
+    <input type="file" id="file" accept=".json,application/json" class="hidden">
+    <textarea id="paste" class="hidden" placeholder='{"date":"2026-08-27","postings":[ ... ]}' aria-label="Paste run JSON"></textarea>
+    <div class="btnrow hidden" id="paste-actions" style="margin-top:10px">
+      <button type="button" class="primary" id="paste-load">Load</button>
+    </div>
+  </section>
+
+  <div id="app" class="hidden">
+    <div class="tiles" id="tiles"></div>
+    <p class="note" id="runnote"></p>
+
+    <div class="controls">
+      <label>Find <input type="search" id="q" placeholder="title, company, keyword"></label>
+      <label>Track
+        <select id="track">
+          <option value="all">All</option>
+          <option value="w2">Employment</option>
+          <option value="contract">Contract</option>
+          <option value="unknown">Unspecified</option>
+        </select>
+      </label>
+      <label>Location
+        <select id="loc">
+          <option value="all">Anywhere</option>
+          <option value="global">Hires globally</option>
+          <option value="us-remote">Remote, residence required</option>
+          <option value="onsite">Onsite</option>
+        </select>
+      </label>
+      <label>Status
+        <select id="status">
+          <option value="all">All</option>
+          <option value="open">Not yet closed</option>
+          <option value="New">New</option>
+          <option value="Applied">Applied</option>
+          <option value="Replied">Replied</option>
+          <option value="Interview">Interview</option>
+          <option value="Offer">Offer</option>
+          <option value="Passed">Passed</option>
+        </select>
+      </label>
+      <label>Min score <input type="range" id="min" min="0" max="100" step="5" value="0">
+        <span class="mono" id="minval">0</span></label>
+      <span class="spacer"></span>
+      <button type="button" id="export">Export pipeline.json</button>
+      <button type="button" id="new">Load another run</button>
+    </div>
+
+    <div id="list"></div>
+  </div>
+
+  <footer>
+    Statuses live in this browser's local storage, keyed by posting URL, so a new
+    run keeps them. Export <span class="mono">pipeline.json</span> into your
+    job-hunt folder to make them readable by the skill and to keep a backup.
+  </footer>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var RUN_KEY = "jobhunt.run";
+  var PIPE_KEY = "jobhunt.pipeline";
+  var STATUSES = ["New", "Applied", "Replied", "Interview", "Offer", "Passed"];
+  var CLOSED = { Offer: 1, Passed: 1 };
+
+  var run = null;
+  var pipeline = load(PIPE_KEY) || {};
+  var openPanels = {};
+
+  var el = {};
+  ["load","pick","file","paste","paste-toggle","paste-actions","paste-load","demo",
+   "app","tiles","runnote","list","q","track","loc","status","min","minval",
+   "export","new"].forEach(function (id) { el[id] = document.getElementById(id); });
+
+  function load(k) {
+    try { return JSON.parse(localStorage.getItem(k)); } catch (e) { return null; }
+  }
+  function save(k, v) {
+    try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) { /* private mode */ }
+  }
+
+  // Only absolute http(s) links become clickable, so a run file can never inject
+  // a scheme, and an empty or relative url falls through to the "No link" chip
+  // instead of resolving against some base into a link that goes nowhere.
+  function safeUrl(u) {
+    if (typeof u !== "string") return null;
+    var s = u.trim();
+    if (!/^https?:\/\//i.test(s)) return null;
+    try {
+      var p = new URL(s);
+      return (p.protocol === "http:" || p.protocol === "https:") ? p.href : null;
+    } catch (e) { return null; }
+  }
+
+  function arr(v) { return Array.isArray(v) ? v : []; }
+
+  // Pipeline identity. Postings with no usable url still need distinct keys, or
+  // marking one Applied marks all of them.
+  function keyOf(p) {
+    return safeUrl(p.url) || [p.title, p.company, p.location].map(function (v) {
+      return typeof v === "string" ? v.trim() : "";
+    }).join("|");
+  }
+
+  function node(tag, cls, text) {
+    var n = document.createElement(tag);
+    if (cls) n.className = cls;
+    if (text !== undefined && text !== null && text !== "") n.textContent = String(text);
+    return n;
+  }
+
+  function band(s) {
+    if (s >= 85) return "s-hi";
+    if (s >= 70) return "s-ok";
+    if (s >= 55) return "s-mid";
+    return "s-lo";
+  }
+
+  var LOC_LABEL = {
+    "global": "hires globally",
+    "us-remote": "remote, residence required",
+    "onsite": "onsite"
+  };
+  var SRC_LABEL = {
+    "company-site": "employer posting",
+    "job-board": "job board",
+    "alert-only": "unconfirmed"
+  };
+
+  function statusOf(p) { return pipeline[keyOf(p)] || "New"; }
+  function setStatus(p, v) {
+    var k = keyOf(p);
+    if (v === "New") { delete pipeline[k]; } else { pipeline[k] = v; }
+    save(PIPE_KEY, pipeline);
+    render();
+  }
+
+  function livePostings() {
+    if (!run || !Array.isArray(run.postings)) return [];
+    return run.postings.filter(function (p) { return p && p.live !== false; });
+  }
+
+  function setRun(data) {
+    if (!data || !Array.isArray(data.postings)) {
+      alert("That file has no \"postings\" array. Check the run JSON shape in SKILL.md.");
+      return;
+    }
+    run = data;
+    save(RUN_KEY, data);
+    el.load.classList.add("hidden");
+    el.app.classList.remove("hidden");
+    render();
+  }
+
+  function render() {
+    var all = livePostings();
+    var dropped = (run.postings || []).length - all.length;
+
+    // scoreboard
+    var counts = { New: 0, Applied: 0, Replied: 0, Interview: 0, Offer: 0, Passed: 0 };
+    all.forEach(function (p) { counts[statusOf(p)] = (counts[statusOf(p)] || 0) + 1; });
+    var strong = all.filter(function (p) { return (+p.score || 0) >= 70; }).length;
+
+    el.tiles.textContent = "";
+    [["Live roles", all.length], ["Score 70+", strong], ["Applied", counts.Applied],
+     ["Replied", counts.Replied], ["Interviewing", counts.Interview], ["Offers", counts.Offer]
+    ].forEach(function (t) {
+      var d = node("div", "tile");
+      d.appendChild(node("b", null, t[1]));
+      d.appendChild(node("span", null, t[0]));
+      el.tiles.appendChild(d);
+    });
+
+    var bits = [];
+    if (run.date) bits.push("Run " + run.date);
+    if (run.focus) bits.push(run.focus);
+    if (dropped > 0) bits.push(dropped + " expired posting" + (dropped === 1 ? "" : "s") + " dropped");
+    el.runnote.textContent = bits.join(" · ");
+
+    // filters
+    var q = el.q.value.trim().toLowerCase();
+    var minScore = +el.min.value;
+    el.minval.textContent = minScore;
+
+    var rows = all.filter(function (p) {
+      if ((+p.score || 0) < minScore) return false;
+      if (el.track.value !== "all" && (p.employmentType || "unknown") !== el.track.value) return false;
+      if (el.loc.value !== "all" && p.locationFit !== el.loc.value) return false;
+      var st = statusOf(p);
+      if (el.status.value === "open") { if (CLOSED[st]) return false; }
+      else if (el.status.value !== "all" && st !== el.status.value) return false;
+      if (q) {
+        var hay = [p.title, p.company, p.verdict, p.location, arr(p.strengths).join(" "),
+                   arr(p.gaps).join(" ")].join(" ").toLowerCase();
+        if (hay.indexOf(q) === -1) return false;
+      }
+      return true;
+    }).sort(function (a, b) { return (+b.score || 0) - (+a.score || 0); });
+
+    // A status change re-renders the whole list, so carry the focused card
+    // across the rebuild. Otherwise focus lands on <body> mid-triage.
+    var active = document.activeElement;
+    var activeCard = active && active.closest ? active.closest(".card") : null;
+    var refocusKey = (activeCard && el.list.contains(activeCard)) ? activeCard.dataset.key : null;
+
+    el.list.textContent = "";
+    if (!rows.length) {
+      var e = node("div", "empty", all.length
+        ? "No roles match these filters."
+        : "This run has no live postings. That is a real result; a thin week is thin.");
+      el.list.appendChild(e);
+      return;
+    }
+    var refocus = null;
+    rows.forEach(function (p) {
+      var c = card(p);
+      if (refocusKey && c.dataset.key === refocusKey) refocus = c.querySelector("select");
+      el.list.appendChild(c);
+    });
+    if (refocus) refocus.focus();
+  }
+
+  function card(p) {
+    var st = statusOf(p);
+    var c = node("div", "card" + (CLOSED[st] ? " done" : ""));
+    c.dataset.key = keyOf(p);
+    var s = +p.score || 0;
+
+    c.appendChild(node("div", "score " + band(s), s));
+
+    var mid = node("div");
+    mid.appendChild(node("div", "title", p.title || "Untitled role"));
+    var co = [p.company, p.location].filter(Boolean).join(" · ");
+    mid.appendChild(node("div", "company", co));
+    if (p.verdict) mid.appendChild(node("p", "verdict", p.verdict));
+
+    var b = node("div", "badges");
+    function badge(text, flag) { if (text) { var n = node("span", "badge" + (flag ? " flag" : ""), text); b.appendChild(n); } }
+    badge(p.salary);
+    badge(p.employmentType === "w2" ? "employment"
+        : p.employmentType === "contract" ? "contract" : null);
+    badge(LOC_LABEL[p.locationFit], p.locationFit === "onsite" || p.locationFit === "us-remote");
+    badge(SRC_LABEL[p.sourceType], p.sourceType === "alert-only");
+    if (typeof p.postedDaysAgo === "number") {
+      badge(p.postedDaysAgo === 0 ? "posted today" : "posted " + p.postedDaysAgo + "d ago",
+            p.postedDaysAgo > 30);
+    }
+    // jobType earns a badge only when it says something employmentType did not.
+    var jt = String(p.jobType || "").toLowerCase();
+    var covered = (p.employmentType === "contract" && jt.indexOf("contract") !== -1) ||
+                  (p.employmentType === "w2" && jt.indexOf("full") !== -1);
+    if (!covered) badge(p.jobType);
+    if (b.childNodes.length) mid.appendChild(b);
+
+    var str = arr(p.strengths);
+    var gap = arr(p.gaps);
+    if (str.length || gap.length) {
+      var d = node("details");
+      // Open panels survive the rebuild a status change triggers.
+      d.open = !!openPanels[c.dataset.key];
+      d.addEventListener("toggle", function () { openPanels[c.dataset.key] = d.open; });
+      d.appendChild(node("summary", null, "Strengths and gaps"));
+      if (str.length) {
+        d.appendChild(node("div", "mono", "MATCHES"));
+        var u1 = node("ul");
+        str.forEach(function (x) { u1.appendChild(node("li", null, x)); });
+        d.appendChild(u1);
+      }
+      if (gap.length) {
+        d.appendChild(node("div", "mono", "GAPS"));
+        var u2 = node("ul");
+        gap.forEach(function (x) { u2.appendChild(node("li", null, x)); });
+        d.appendChild(u2);
+      }
+      mid.appendChild(d);
+    }
+    c.appendChild(mid);
+
+    var side = node("div", "side");
+    var url = safeUrl(p.url);
+    if (url) {
+      var a = node("a", "btn", "Apply ↗");
+      a.href = url; a.target = "_blank"; a.rel = "noopener noreferrer";
+      side.appendChild(a);
+    } else {
+      side.appendChild(node("span", "btn dead", "No link"));
+    }
+    var pack = node("button", null, "Apply pack");
+    pack.type = "button";
+    pack.title = "Copy a prompt that asks your assistant for the adversarial review, "
+               + "a tailored résumé, and a cover letter brief";
+    pack.addEventListener("click", function () {
+      var text = "Build the apply pack for this role: "
+        + (p.title || "role") + " at " + (p.company || "unknown company")
+        + (url ? " (" + url + ")" : "")
+        + ". Adversarial fit review, tailored resume, cover letter brief.";
+      var done = function () { pack.textContent = "Copied"; setTimeout(function () { pack.textContent = "Apply pack"; }, 1600); };
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(text).then(done, function () { window.prompt("Copy this:", text); });
+      } else {
+        window.prompt("Copy this:", text);
+      }
+    });
+    side.appendChild(pack);
+
+    var sel = node("select");
+    sel.setAttribute("aria-label", "Status for " + (p.title || "this role"));
+    STATUSES.forEach(function (v) {
+      var o = node("option", null, v);
+      o.value = v;
+      if (v === st) o.selected = true;
+      sel.appendChild(o);
+    });
+    sel.addEventListener("change", function () { setStatus(p, sel.value); });
+    side.appendChild(sel);
+    c.appendChild(side);
+
+    return c;
+  }
+
+  // loading
+  function readFile(f) {
+    var r = new FileReader();
+    r.onload = function () {
+      try { setRun(JSON.parse(String(r.result))); }
+      catch (e) { alert("That is not valid JSON: " + e.message); }
+    };
+    r.readAsText(f);
+  }
+
+  el.pick.addEventListener("click", function () { el.file.click(); });
+  el.file.addEventListener("change", function () { if (el.file.files[0]) readFile(el.file.files[0]); });
+
+  el["paste-toggle"].addEventListener("click", function () {
+    el.paste.classList.toggle("hidden");
+    el["paste-actions"].classList.toggle("hidden");
+    if (!el.paste.classList.contains("hidden")) el.paste.focus();
+  });
+  el["paste-load"].addEventListener("click", function () {
+    try { setRun(JSON.parse(el.paste.value)); }
+    catch (e) { alert("That is not valid JSON: " + e.message); }
+  });
+
+  ["dragenter", "dragover"].forEach(function (ev) {
+    el.load.addEventListener(ev, function (e) { e.preventDefault(); el.load.classList.add("drag"); });
+  });
+  ["dragleave", "drop"].forEach(function (ev) {
+    el.load.addEventListener(ev, function (e) { e.preventDefault(); el.load.classList.remove("drag"); });
+  });
+  el.load.addEventListener("drop", function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) readFile(f);
+  });
+
+  el["new"].addEventListener("click", function () {
+    el.app.classList.add("hidden");
+    el.load.classList.remove("hidden");
+  });
+
+  el.export.addEventListener("click", function () {
+    var blob = new Blob([JSON.stringify(pipeline, null, 2)], { type: "application/json" });
+    var a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = "pipeline.json";
+    a.click();
+    setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+  });
+
+  ["q", "track", "loc", "status", "min"].forEach(function (id) {
+    el[id].addEventListener("input", render);
+  });
+
+  el.demo.addEventListener("click", function () {
+    setRun({
+      date: "2026-08-27",
+      focus: "Example data. Load a real run to replace it.",
+      postings: [
+        { title: "Forward Deployed Engineer", company: "Northwind Systems",
+          url: "https://example.com/jobs/fde", location: "Remote (US)",
+          salary: "$150,000 - $190,000", jobType: "Full-time", employmentType: "w2",
+          score: 84, locationFit: "us-remote", sourceType: "company-site",
+          postedDaysAgo: 3, live: true,
+          verdict: "Strong match. They want the discovery-to-rollout work you already do, and they name your stack.",
+          strengths: ["Owns POC through production", "Names the tools you use daily"],
+          gaps: ["Wants Kubernetes depth you do not have", "May require US residence"] },
+        { title: "Automation Consultant (contract)", company: "Halvorsen Group",
+          url: "https://example.com/jobs/automation", location: "Anywhere",
+          salary: "$95 - $120 / hour", jobType: "Contract", employmentType: "contract",
+          score: 71, locationFit: "global", sourceType: "job-board",
+          postedDaysAgo: 9, live: true,
+          verdict: "Good contract fit, billable from anywhere. Scope is vague, so ask what the first project is.",
+          strengths: ["Exactly the integration work you have shipped"],
+          gaps: ["No named end client", "Rate is below your target band"] },
+        { title: "Platform Engineer", company: "Cedarline",
+          url: "https://example.com/jobs/platform", location: "Austin, TX",
+          salary: "", jobType: "Full-time", employmentType: "w2",
+          score: 41, locationFit: "onsite", sourceType: "alert-only",
+          postedDaysAgo: 34, live: true,
+          verdict: "Onsite in Austin and unconfirmed on the employer's own site. Visible so you can judge it, not recommended.",
+          strengths: ["Infrastructure work is adjacent to yours"],
+          gaps: ["Requires relocation", "Could not confirm the posting is still open"] }
+      ]
+    });
+  });
+
+  var cached = load(RUN_KEY);
+  if (cached) setRun(cached);
+})();
+</script>
+</body>
+</html>
