@@ -88,6 +88,24 @@
       "sourceType": "company-site",
       "postedDaysAgo": 41,
       "live": false
+    },
+    {
+      "title": "AI Solutions Engineer",
+      "company": "Brightmoor Analytics",
+      "url": "https://example.com/jobs/challenged",
+      "location": "Remote (US)",
+      "salary": "",
+      "jobType": "Full-time",
+      "employmentType": "w2",
+      "score": null,
+      "scoreNote": "The posting page returned a bot challenge, so nothing past the title was read. The link resolves and the title is real.",
+      "verdict": "Could not be scored. The page would not open for the search, and the link works for you, so open it.",
+      "strengths": [],
+      "gaps": [],
+      "locationFit": "us-remote",
+      "sourceType": "company-site",
+      "postedDaysAgo": 2,
+      "live": true
     }
   ]
 }

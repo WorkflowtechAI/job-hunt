@@ -117,6 +117,12 @@
   .s-ok { background: var(--ok-bg); color: var(--accent); }
   .s-mid { background: var(--warn-bg); color: var(--warn); }
   .s-lo { background: var(--mute-bg); color: var(--ink-3); }
+  /* Unknown is not a band. Dashed and empty, so it does not read as a middling
+     score, which is what --warn-bg would have made it: that is byte-identical
+     to .s-mid above, the 55 to 69 band. */
+  .s-none { background: transparent; color: var(--ink-3); border: 1px dashed var(--line); }
+  .scorenote { font-size: 13px; color: var(--ink-2); margin: 0 0 9px; }
+  .scorenote b { font-weight: 620; color: var(--warn); }
   .title { font-weight: 620; font-size: 16px; letter-spacing: -0.01em; }
   .company { color: var(--ink-2); font-size: 14px; margin: 1px 0 7px; }
   .verdict { margin: 0 0 9px; }
@@ -280,7 +286,11 @@
     if (p.sourceType) facts.push("Source: " + p.sourceType);
     if (facts.length) lines.push(facts.join(". ") + ".");
 
-    if (typeof p.score === "number") lines.push("This run scored it " + p.score + "/100.");
+    if (scored(p)) lines.push("This run scored it " + scoreOf(p) + "/100.");
+    else if (p.scoreNote) {
+      lines.push("This run could not score it. " + p.scoreNote
+        + " Score it as part of the pack, per the rubric.");
+    }
     if (p.verdict) lines.push("Verdict: " + p.verdict);
 
     var gaps = arr(p.gaps).filter(function (g) { return typeof g === "string" && g.trim(); });
@@ -305,7 +315,27 @@
     return n;
   }
 
-  function band(s) {
+  // A posting nobody could score is not a posting scored 0. A run file says so
+  // with score: null, and every place that used to coerce with +p.score || 0 has
+  // to ask first, or a tooling failure renders as a bad job at the bottom of the
+  // list. Strings still coerce: a hand-written or spreadsheet-exported run file
+  // carrying "84" is a scored posting, and a strict typeof check would have
+  // reclassified those as unknown and floated them to the top.
+  function scored(p) {
+    // Only a number or a numeric string is a score. The typeof gate is not
+    // decoration: Number([]) is 0, so an array in that field would otherwise
+    // have rendered as a 0 chip in the poor-fit band, which is the exact
+    // failure this function exists to prevent. Raised in review.
+    var v = p.score;
+    if (typeof v !== "number" && typeof v !== "string") return false;
+    if (v === "") return false;
+    return isFinite(Number(v));
+  }
+  function scoreOf(p) { return Number(p.score); }
+
+  function band(p) {
+    if (!scored(p)) return "s-none";
+    var s = scoreOf(p);
     if (s >= 85) return "s-hi";
     if (s >= 70) return "s-ok";
     if (s >= 55) return "s-mid";
@@ -355,7 +385,8 @@
     // scoreboard
     var counts = { New: 0, Applied: 0, Replied: 0, Interview: 0, Offer: 0, Passed: 0 };
     all.forEach(function (p) { counts[statusOf(p)] = (counts[statusOf(p)] || 0) + 1; });
-    var strong = all.filter(function (p) { return (+p.score || 0) >= 70; }).length;
+    var strong = all.filter(function (p) { return scored(p) && scoreOf(p) >= 70; }).length;
+    var unscored = all.filter(function (p) { return !scored(p); }).length;
 
     el.tiles.textContent = "";
     [["Live roles", all.length], ["Score 70+", strong], ["Applied", counts.Applied],
@@ -371,6 +402,9 @@
     if (run.date) bits.push("Run " + run.date);
     if (run.focus) bits.push(run.focus);
     if (dropped > 0) bits.push(dropped + " expired posting" + (dropped === 1 ? "" : "s") + " dropped");
+    // Next to the dropped count rather than as a seventh tile, so the row does
+    // not change shape on the runs where nothing failed.
+    if (unscored > 0) bits.push(unscored + " could not be scored");
     el.runnote.textContent = bits.join(" · ");
 
     // filters
@@ -379,7 +413,9 @@
     el.minval.textContent = minScore;
 
     var rows = all.filter(function (p) {
-      if ((+p.score || 0) < minScore) return false;
+      // Unscored postings are exempt from the minimum. Hiding an unknown behind
+      // a score filter is the same silent bin as dropping the role outright.
+      if (scored(p) && scoreOf(p) < minScore) return false;
       if (el.track.value !== "all" && (p.employmentType || "unknown") !== el.track.value) return false;
       if (el.loc.value !== "all" && p.locationFit !== el.loc.value) return false;
       var st = statusOf(p);
@@ -391,7 +427,14 @@
         if (hay.indexOf(q) === -1) return false;
       }
       return true;
-    }).sort(function (a, b) { return (+b.score || 0) - (+a.score || 0); });
+    }).sort(function (a, b) {
+      // Unknown sorts first, not last. A posting nobody could score might be the
+      // best one in the run, and the bottom of the list is where roles go to be
+      // forgotten.
+      if (scored(a) !== scored(b)) return scored(a) ? 1 : -1;
+      if (!scored(a)) return 0;
+      return scoreOf(b) - scoreOf(a);
+    });
 
     // A status change re-renders the whole list, so carry the focused card
     // across the rebuild. Otherwise focus lands on <body> mid-triage.
@@ -420,15 +463,26 @@
     var st = statusOf(p);
     var c = node("div", "card" + (CLOSED[st] ? " done" : ""));
     c.dataset.key = keyOf(p);
-    var s = +p.score || 0;
-
-    c.appendChild(node("div", "score " + band(s), s));
+    var chip = node("div", "score " + band(p), scored(p) ? scoreOf(p) : "?");
+    chip.title = scored(p) ? "Score out of 100" : "Not scored";
+    c.appendChild(chip);
 
     var mid = node("div");
     mid.appendChild(node("div", "title", p.title || "Untitled role"));
     var co = [p.company, p.location].filter(Boolean).join(" · ");
     mid.appendChild(node("div", "company", co));
     if (p.verdict) mid.appendChild(node("p", "verdict", p.verdict));
+
+    // The note goes on the card face, not one click down. "Nobody could score
+    // this" is the last thing that belongs behind a disclosure triangle, and an
+    // unscored posting has no strengths or gaps, so the details panel it would
+    // otherwise live in does not render at all.
+    if (!scored(p) && p.scoreNote) {
+      var sn = node("p", "scorenote");
+      sn.appendChild(node("b", null, "Not scored. "));
+      sn.appendChild(document.createTextNode(String(p.scoreNote)));
+      mid.appendChild(sn);
+    }
 
     var b = node("div", "badges");
     function badge(text, flag) { if (text) { var n = node("span", "badge" + (flag ? " flag" : ""), text); b.appendChild(n); } }
@@ -446,6 +500,7 @@
     var covered = (p.employmentType === "contract" && jt.indexOf("contract") !== -1) ||
                   (p.employmentType === "w2" && jt.indexOf("full") !== -1);
     if (!covered) badge(p.jobType);
+    if (!scored(p)) badge("not scored", true);
     if (b.childNodes.length) mid.appendChild(b);
 
     var str = arr(p.strengths);
@@ -584,6 +639,14 @@
           verdict: "Good contract fit, billable from anywhere. Scope is vague, so ask what the first project is.",
           strengths: ["Exactly the integration work you have shipped"],
           gaps: ["No named end client", "Rate is below your target band"] },
+        { title: "AI Solutions Engineer", company: "Brightmoor Analytics",
+          url: "https://example.com/jobs/challenged", location: "Remote (US)",
+          salary: "", jobType: "Full-time", employmentType: "w2",
+          score: null,
+          scoreNote: "The posting page returned a bot challenge, so nothing past the title was read. The link resolves and the title is real.",
+          locationFit: "us-remote", sourceType: "company-site", live: true,
+          verdict: "Could not be scored. The page would not open for the search, and the link works for you, so open it.",
+          strengths: [], gaps: [] },
         { title: "Platform Engineer", company: "Cedarline",
           url: "https://example.com/jobs/platform", location: "Austin, TX",
           salary: "", jobType: "Full-time", employmentType: "w2",

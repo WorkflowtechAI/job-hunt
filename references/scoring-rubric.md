@@ -83,9 +83,21 @@ ranks, it never gates above the floor.**
 
 Say the range plainly and never editorialize. Calling a role "underpaid" and
 burying it substitutes a judgment for the person's own, and a role at the low end
-is a real lead in a thin month. Where a posting states no salary, do not infer
-one and do not penalize the omission; score the midpoint of the dimension and
-move on.
+is a real lead in a thin month.
+
+**Where the posting states no salary, this dimension does not score.** Take the
+posting out of 85 instead of out of 100, and scale: a posting that earns 60 of
+the 85 available scores 71. Do not infer a range, do not penalize the omission,
+and do not award the midpoint.
+
+The midpoint was the old rule here and it was wrong. Most postings state no
+salary, so a midpoint hands the same 7.5 points to two thirds of a run, which is
+not ranking anything, it is adding a constant. And whether a range is published
+is a fact about the employer's jurisdiction rather than about the fit.
+
+Note it in the verdict when it changes the band: "no range published, so this is
+out of 85" is one clause, and it stops the number reading as a judgment about the
+pay.
 
 ### Reachability, 10
 
@@ -103,11 +115,46 @@ between two equally good matches, and it is usually right.
 | 55-69 | Plausible. Worth an application when the week has room | Batch these |
 | 40-54 | Weak. One thing is genuinely off | Visible, not recommended |
 | under 40 | Poor fit | Stays on the list, sorted to the bottom |
+| no score | Nobody could score it | Sorted to the top. Open it yourself |
 
 Expect two or three in the top band per good run, and zero in a thin week. **Zero
 is a valid result and it gets reported as zero.** A padded top band trains the
 person to stop trusting the ordering, and once that trust is gone the whole
 shortlist is decoration.
+
+## When scoring fails
+
+A posting scored 30 and a posting nobody could score are different facts.
+Collapsing them makes a tooling failure look like a bad job, and the person
+quietly stops trusting the bottom of the list.
+
+Scoring failed when the posting page could not be read at all: a bot challenge, a
+login wall, a page that returned nothing. The link may still resolve and the
+title may still be real.
+
+```json
+"score": null,
+"scoreNote": "The posting page returned a bot challenge, so nothing past the title was read. The link resolves and the title is real."
+```
+
+`score: null` is the whole marker. There is no second state field, because two
+fields that can disagree eventually do, and `score: 40` sitting next to
+`scoreState: "unscored"` is a bug nobody can adjudicate.
+
+**Never write 0.** Zero is a score, and it means the posting was read and is a
+poor fit. Null means nobody knows. `scoreNote` is required whenever the score is
+null, and it says what could not be read and what is still known.
+
+**This is a narrow door.** A posting whose page opened is scored, even thinly. A
+run where a third of the postings come back null is not a run with an unusual
+number of hard postings, it is a sourcing step that is not working, and the
+handover paragraph says so rather than shipping a column of question marks.
+
+The dashboard renders these with a **?** where the score goes, sorts them
+**above** the scored postings, and exempts them from the minimum-score filter.
+Unknown is not last, and a minimum-score slider that hides them is the same
+silent bin the rest of this package exists to prevent. Put the plain-language
+version in the verdict too, because the verdict is what gets read.
 
 ## Strengths, gaps, verdict
 

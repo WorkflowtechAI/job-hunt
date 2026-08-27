@@ -166,6 +166,11 @@ drop the run file on it.
 - **Never links a job you have to pay to read.** Job-seeker paywalls get traced to
   the employer's posting, or dropped.
 - **Never quietly bins a role.** Unconfirmed postings are labeled unconfirmed.
+- **Never scores a posting it could not read.** Those come back with no number, a
+  note saying what was unreadable, and a spot at the top of the list. A 0 would
+  read as a bad job when the truth is a failed fetch. Same rule for pay: where a
+  posting publishes no range, the score is out of 85 and says so, instead of
+  awarding an invented midpoint.
 
 ## The honest part
 

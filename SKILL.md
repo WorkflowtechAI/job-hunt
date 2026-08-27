@@ -95,7 +95,17 @@ The rubric's core rule: **pay ranks, it does not gate.** Above the profile's
 stated floor, every role is takeable, so compensation contributes to the score
 the same way a closer role match does and never removes a posting from the list.
 A ranker that hides the best thing currently available has failed rather than
-protected anyone.
+protected anyone. Where a posting publishes no range, the compensation dimension
+does not score and the posting is marked out of 85; the rubric says how. A
+dimension that awards two thirds of a run the same midpoint is adding a constant,
+not ranking.
+
+**A posting nobody could score is not a posting scored 0.** Where the page could
+not be read at all, write `"score": null` with a `scoreNote` saying what was
+unreadable and what is still known. Zero means read and poor. Null means unknown,
+and the dashboard shows it with a `?` at the top of the list rather than at the
+bottom. A run where a third of the postings come back null is a sourcing problem,
+and the handover paragraph says so.
 
 ### 4. Verify every link
 
@@ -146,6 +156,9 @@ indistinguishable, to the person reading, from a role that never existed.
 `locationFit`: `global` (hires anywhere, or billable from anywhere) | `us-remote`
 (remote but likely requires residence in the country) | `onsite` (relocation).
 `sourceType`: `company-site` | `job-board` | `alert-only`.
+`score`: 0-100, or **`null`** when the posting page could not be read at all.
+Never 0 for that. `scoreNote` is required alongside a null score and says what was
+unreadable and what is still known.
 
 A "remote US" posting usually means remote from inside the US. Treating it as
 location-agnostic is the single most common scoring error.
@@ -273,6 +286,9 @@ the posted role is a poor fit.
    "strong match", "apply". Jargon in a verdict is a small failure of respect.
 6. **Say when the search came up short.** Three real roles is a result. Twenty
    padded ones is a waste of their week.
+7. **A failed score is not a low score.** `score: null` with a note, never 0. A
+   tooling failure that renders as a bad job costs the trust the whole ordering
+   runs on, and it costs it silently.
 
 ## Weekly scoreboard
 
