@@ -1,6 +1,6 @@
 ---
 name: job-hunt
-description: "Run a job and contract search as a repeatable loop. A one-time guided intake builds a candidate profile from the person's CV, then each run sources across job boards, ATS pages and talent platforms, scores every posting 0-100 against that profile, verifies each link is live, and writes a run file the local HTML dashboard reads. Per role, an apply pack runs an adversarial five-reader review of their résumé against the job description, produces a tailored résumé, and briefs what the cover letter must hit without drafting it. Also covers an interview answer bank, per-company interview prep, salary band research, contract outreach, and a weekly scoreboard. Two tracks: employment applications and contract engagements. Trigger on 'job search', 'find me jobs', 'refresh my jobs', 'run a search', 'rank these postings', 'am I a fit for this', 'review my resume', 'tailor my CV', 'apply pack', 'cover letter', 'application pipeline', 'job tracker', 'interview prep', 'what does this role pay', or 'contract work'."
+description: "Run a job and contract search as a repeatable loop. A one-time guided intake builds a candidate profile from the person's CV, then each run sources across job boards, ATS pages and talent platforms, scores every posting 0-100 against that profile, verifies each link is live, and writes a run file the local HTML dashboard reads. Per role, an apply pack runs an adversarial five-reader review of their résumé against the job description, produces a tailored résumé, and briefs what the cover letter must hit without drafting it. Also covers an interview answer bank, per-company interview prep, salary bands, contract outreach, and a weekly scoreboard. Two tracks: employment applications and contract engagements. Trigger on 'job search', 'find me jobs', 'refresh my jobs', 'run a search', 'rank these postings', 'am I a fit for this', 'review my resume', 'tailor my CV', 'apply pack', 'cover letter', 'application pipeline', 'render my resume', 'interview prep', 'what does this role pay', or 'contract work'."
 ---
 
 # Job Hunt
@@ -19,16 +19,24 @@ profile sells both ways.
 
 ## What this runs on
 
-Three things in one folder. Default `~/job-hunt/`, anywhere works.
+A folder of plain files. Default `~/job-hunt/`, anywhere works.
 
 | File | What it is | Written by |
 |---|---|---|
 | `profile.md` | The candidate profile: identity, target roles, hard limits, honest claims | The intake, once. Edited whenever reality changes |
+| `resume/master.md` | The master résumé as markdown: everything, in one file | The intake, once. Edited when a role or a number changes |
 | `runs/<date>.json` | One search run: the scored shortlist | Each search |
+| `applications/<date>-<company>-<role>/` | One application: the posting, the review, the tailored résumé, the letter brief, the change log | Each apply pack |
 | `pipeline.json` | Application status per posting | Exported from the dashboard |
 
 `dashboard.html` opens in a browser with no server and no install. Drop a run
 file on it to see the shortlist; it tracks status per posting from there.
+
+`resume.html` is its sibling. Drop `resume/master.md` or a tailored copy on it
+and it renders the page, and the browser's own print dialog saves the PDF. No
+install, no build step, no service. `references/resume-master.md` holds the
+master résumé format and says why the render path is a browser rather than a
+toolchain.
 
 No account, no database, and no key required. Where the person already pays for
 a source that has an API, the search uses it: `references/keyed-sources.md`,
@@ -161,8 +169,11 @@ shortlist. Never automatically for a whole run. Three outputs:
    written: the six-second screen, the keyword filter, the hostile hiring
    manager, the comparison against the likely pool, and the gap hunter. It ends
    with a call, and "skip this one" is a real answer.
-2. **A tailored résumé** built from their master by reordering, rewording and
-   cutting. Never by inventing.
+2. **A tailored résumé,** built from `resume/master.md` by reordering, rewording
+   and cutting. Never by inventing. It lands as a file in the application's own
+   folder, beside a change log that labels every edit, and renders to a PDF
+   through `resume.html`. Chat text made the person retype it, and retyping is
+   where invention gets in.
 3. **A cover letter brief.** The points to hit, in order, with the evidence
    attached, what to address directly, and what to leave out.
 

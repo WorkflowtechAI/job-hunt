@@ -59,8 +59,10 @@ for version control.
 - **`profile.md`.** It is a file destined for version control.
 - **The run JSON.** Those get pasted into the dashboard, dropped into chats, and
   kept as history.
-- **`dashboard.html`.** It has no network code, and adding any would break the
-  one claim about it that is unambiguously true.
+- **`dashboard.html` and `resume.html`.** Neither has network code, and
+  `resume.html` carries a content-security-policy header that would block a
+  request anyway. Adding network code to either would break the one claim about
+  them that is unambiguously true.
 
 Never print, echo, or return the value either. When the variable is missing, the
 whole of the correct response is: *set `FOORILLA_API_KEY` in your job-hunt env

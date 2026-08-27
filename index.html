@@ -133,8 +133,11 @@
   </ul>
   <p>It ends with a call, and <em>skip this one</em> is a real answer. Then you get
     a <b>tailored résumé</b> for that posting, built by reordering, rewording and
-    cutting your real one, never by inventing anything, with a list of what
-    changed and why.</p>
+    cutting your real one, never by inventing anything. It arrives as a file in its
+    own application folder, next to a change log that labels every edit MOVED,
+    REWORDED or CUT. There is no ADDED label, and three one-line commands catch
+    most of what would need one. For a PDF, drop the file on
+    <code>resume.html</code> and print it.</p>
 
   <div class="box">
     <h3>And a cover letter brief, not a cover letter</h3>
@@ -153,10 +156,13 @@
     <tr><th>File</th><th>What it does</th></tr>
     <tr><td class="mono">SKILL.md</td><td>The doctrine your assistant loads: the search loop, the run format, the link-hygiene rules, the guardrails</td></tr>
     <tr><td class="mono">dashboard.html</td><td>The shortlist and the application pipeline. Opens from your filesystem, keeps nothing anywhere else</td></tr>
+    <tr><td class="mono">resume.html</td><td>Renders a résumé markdown file as a page, so your browser can save it as a PDF. Local only, no network code</td></tr>
+    <tr><td class="mono">example-resume.md</td><td>A résumé in the master format, and the file to test the renderer with</td></tr>
     <tr><td class="mono">references/intake.md</td><td>The guided intake that builds your profile</td></tr>
     <tr><td class="mono">references/profile-template.md</td><td>The profile the intake fills in</td></tr>
     <tr><td class="mono">references/sourcing-map.md</td><td>Where to look, in priority order, and the rule for each channel</td></tr>
     <tr><td class="mono">references/scoring-rubric.md</td><td>The six dimensions, the calibration bands, and what never gets filtered out</td></tr>
+    <tr><td class="mono">references/resume-master.md</td><td>Your résumé as one markdown file: how a .docx gets read in, where each tailored copy lives on disk, how it renders to a PDF with nothing installed, and the commands that check a tailored copy added nothing</td></tr>
     <tr><td class="mono">references/apply-pack.md</td><td>Per role you pick: an adversarial fit review from five hostile readers, a tailored résumé, and a brief of what your cover letter should hit</td></tr>
     <tr><td class="mono">references/compensation.md</td><td>How to research a real salary band before you answer the question</td></tr>
     <tr><td class="mono">references/keyed-sources.md</td><td>Optional, and off by default: how to hand the search a paid job-data API key you already have, and where that key must never go</td></tr>
@@ -189,15 +195,17 @@ git clone https://github.com/WorkflowtechAI/job-hunt.git "$HOME\.claude\skills\j
     <code>SKILL.md</code>.</p>
 
   <h3>2. Make your folder</h3>
-  <pre><code>mkdir -p ~/job-hunt/runs
-cp ~/.claude/skills/job-hunt/dashboard.html ~/job-hunt/</code></pre>
+  <pre><code>mkdir -p ~/job-hunt/runs ~/job-hunt/resume ~/job-hunt/applications
+cp ~/.claude/skills/job-hunt/{dashboard,resume}.html ~/job-hunt/</code></pre>
   <p>Anywhere works, that is just the default. A private git repo is a good home
     for it: your whole search, versioned, and portable to a new machine.</p>
 
   <h3>3. Run the intake</h3>
   <p>Point your assistant at your CV and say <em>"run the job-hunt intake"</em>.
-    Answer the questions. It writes <code>~/job-hunt/profile.md</code> at the end,
-    which is plain markdown you can edit whenever anything changes.</p>
+    Answer the questions. It writes <code>~/job-hunt/profile.md</code> and
+    <code>~/job-hunt/resume/master.md</code> at the end, both plain markdown you can
+    edit whenever anything changes. A <code>.docx</code> is fine; it gets read, not
+    retyped.</p>
 
   <h3>4. First search</h3>
   <p>Say <em>"refresh my jobs"</em>. Expect it to take a while: the sourcing is
@@ -240,7 +248,7 @@ cp ~/.claude/skills/job-hunt/dashboard.html ~/job-hunt/</code></pre>
       surfaces none. It will tell you that instead of padding the list, which is
       the whole reason the list stays worth reading.</p>
     <p>The work you still have to do: the interviews, the follow-ups, the
-      decisions, and about ten minutes of tailoring per application. What you get
+      decisions, and the read-through on every tailored résumé before it goes out. What you get
       back is the sourcing, the ranking, the paperwork, and a process that does
       not fall apart in week three.</p>
   </div>

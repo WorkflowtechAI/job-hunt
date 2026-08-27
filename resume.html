@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex">
+<!-- The page says nothing leaves the browser, and this makes that part structural
+     rather than a promise: no connection of any kind is permitted, forms cannot
+     submit, and the only images allowed are data URIs already in the file. There
+     is no fetch, no XHR and no remote src here today, and this is what stops a
+     later edit from quietly adding one.
+
+     What it does NOT do is stop injected script. Serving this page's own inline
+     script requires script-src 'unsafe-inline', which permits any other inline
+     script too, so an injected event handler would still run if the escaping in
+     esc() ever had a hole. esc() is the defence against injection; this header is
+     the defence against anything injected carrying a résumé out of the browser.
+     Raised in review, where the first version of this comment claimed the second
+     was a backstop for the first. -->
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; img-src data:; style-src 'unsafe-inline'; script-src 'unsafe-inline'; form-action 'none'">
+<title>Resume</title>
+<style>
+  :root {
+    color-scheme: light dark;
+    --bg: #ffffff;
+    --panel: #f6f7f9;
+    --panel-2: #eef0f4;
+    --line: #d9dde5;
+    --ink: #14181f;
+    --ink-2: #545c6b;
+    --ink-3: #7b8494;
+    --accent: #2a5bd7;
+    --on-accent: #ffffff;
+    --radius: 10px;
+
+    /* the document. pt on screen as well as in print, so the preview is the page */
+    --fs: 10.4pt;
+    --lh: 1.42;
+    --sp: 1;
+    --pad: 14mm;
+    --sheetw: 215.9mm;
+    --paper: #ffffff;
+    --paper-ink: #14181f;
+    --paper-ink-2: #4a5260;
+    --paper-line: #c9ced8;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --bg: #0f1116;
+      --panel: #161a21;
+      --panel-2: #1d222b;
+      --line: #2a313d;
+      --ink: #e8ebf1;
+      --ink-2: #a3acbb;
+      --ink-3: #77808f;
+      --accent: #7ba0ff;
+      --on-accent: #0f1116;
+    }
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--bg);
+    color: var(--ink);
+    font: 15px/1.55 ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 28px 20px 8px; }
+  h1.page { font-size: 22px; margin: 0 0 2px; letter-spacing: -0.01em; }
+  .sub { color: var(--ink-2); font-size: 14px; margin: 0 0 22px; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .hidden { display: none !important; }
+
+  #load {
+    border: 1.5px dashed var(--line); border-radius: var(--radius);
+    background: var(--panel); padding: 22px; text-align: center; margin-bottom: 18px;
+  }
+  #load.drag { border-color: var(--accent); background: var(--panel-2); }
+  #load p { margin: 0 0 12px; color: var(--ink-2); }
+  .btnrow { display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; align-items: center; }
+  button, .btn {
+    font: inherit; font-size: 14px; cursor: pointer;
+    background: var(--panel-2); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px; padding: 7px 13px;
+  }
+  button:hover, .btn:hover { border-color: var(--accent); }
+  button.primary { background: var(--accent); border-color: var(--accent); color: var(--on-accent); }
+  button:focus-visible, a:focus-visible, select:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent); outline-offset: 2px;
+  }
+  select {
+    font: inherit; font-size: 14px; padding: 6px 8px; border-radius: 8px;
+    background: var(--panel-2); color: var(--ink); border: 1px solid var(--line);
+  }
+  label.ctl { display: inline-flex; gap: 6px; align-items: center; font-size: 13px; color: var(--ink-2); }
+  textarea {
+    width: 100%; min-height: 150px; margin-top: 12px; padding: 10px;
+    font: 13px/1.5 ui-monospace, Consolas, monospace;
+    background: var(--bg); color: var(--ink);
+    border: 1px solid var(--line); border-radius: 8px;
+  }
+  #tools { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 6px; }
+  .note { color: var(--ink-3); font-size: 12.5px; margin: 8px 0 20px; }
+
+  /* the sheet */
+  .sheetwrap { padding: 0 20px 80px; }
+  .sheet {
+    position: relative;
+    max-width: var(--sheetw); margin: 0 auto; padding: var(--pad);
+    background: var(--paper); color: var(--paper-ink);
+    border: 1px solid var(--line); border-radius: 2px;
+    box-shadow: 0 2px 14px rgba(0, 0, 0, 0.10);
+    font-size: var(--fs); line-height: var(--lh);
+  }
+  #guides { position: absolute; left: 0; right: 0; bottom: 0; top: var(--pad); pointer-events: none; }
+
+  #doc h1 {
+    font-size: 1.85em; line-height: 1.15; margin: 0 0 calc(2px * var(--sp));
+    letter-spacing: -0.01em; color: var(--paper-ink);
+  }
+  #doc .headline { font-size: 1.05em; margin: 0 0 calc(3px * var(--sp)); color: var(--paper-ink); }
+  #doc h2 {
+    font-size: 0.82em; text-transform: uppercase; letter-spacing: 0.09em;
+    margin: calc(15px * var(--sp)) 0 calc(7px * var(--sp));
+    padding-bottom: 3px; border-bottom: 1px solid var(--paper-line);
+    color: var(--paper-ink);
+  }
+  #doc h3 { font-size: 1.02em; margin: calc(10px * var(--sp)) 0 1px; }
+  #doc .entry > h3:first-child { margin-top: 0; }
+  #doc .entry { margin-top: calc(10px * var(--sp)); }
+  #doc .meta { color: var(--paper-ink-2); margin: 0 0 calc(4px * var(--sp)); font-size: 0.93em; }
+  #doc .kv { margin: 0 0 calc(2px * var(--sp)); }
+  #doc p { margin: 0 0 calc(6px * var(--sp)); }
+  #doc ul { margin: calc(3px * var(--sp)) 0 calc(6px * var(--sp)); padding-left: 1.15em; }
+  #doc li { margin: 0 0 calc(2.5px * var(--sp)); }
+  #doc a { color: var(--paper-ink); text-decoration: underline; text-underline-offset: 2px; }
+  #doc strong { font-weight: 650; }
+  #doc code { font-family: ui-monospace, Consolas, monospace; font-size: 0.94em; }
+  #doc hr { border: 0; border-top: 1px solid var(--paper-line); margin: calc(10px * var(--sp)) 0; }
+
+  @page { size: letter; margin: 14mm; }
+  @media print {
+    .noprint { display: none !important; }
+    body { background: #fff; }
+    .sheetwrap { padding: 0; }
+    .sheet {
+      max-width: none; margin: 0; padding: 0;
+      border: 0; border-radius: 0; box-shadow: none;
+    }
+    #guides { display: none; }
+    #doc h2 { break-after: avoid; page-break-after: avoid; }
+    #doc .entry { break-inside: avoid; page-break-inside: avoid; }
+    #doc li { break-inside: avoid; page-break-inside: avoid; }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap noprint">
+  <h1 class="page">Resume</h1>
+  <p class="sub">Renders your r&eacute;sum&eacute; markdown as a page, so you can print it to PDF.
+     Everything stays in this browser. Nothing is uploaded anywhere.</p>
+
+  <section id="load">
+    <p><strong>Drop a r&eacute;sum&eacute; file here</strong>
+       (<span class="mono">resume/master.md</span>, or a tailored copy), or:</p>
+    <div class="btnrow">
+      <button type="button" id="pick">Choose file</button>
+      <button type="button" id="paste-toggle">Paste markdown</button>
+      <button type="button" id="demo">See an example</button>
+    </div>
+    <input type="file" id="file" accept=".md,.markdown,.txt,text/markdown,text/plain" class="hidden">
+    <textarea id="paste" class="hidden" placeholder="# Your Name&#10;&#10;## Experience&#10;&#10;### Role&#10;&#10;**Company** &middot; 2022 to present&#10;&#10;- what you did" aria-label="Paste resume markdown"></textarea>
+    <div class="btnrow hidden" id="paste-actions" style="margin-top:10px">
+      <button type="button" class="primary" id="paste-load">Render</button>
+    </div>
+  </section>
+
+  <div id="tools" class="hidden">
+    <button type="button" class="primary" id="print">Print, or save as PDF</button>
+    <label class="ctl">Density
+      <select id="density">
+        <option value="compact">Compact</option>
+        <option value="normal" selected>Normal</option>
+        <option value="roomy">Roomy</option>
+      </select>
+    </label>
+    <label class="ctl">Paper
+      <select id="paper">
+        <option value="letter" selected>Letter</option>
+        <option value="a4">A4</option>
+      </select>
+    </label>
+    <label class="ctl"><input type="checkbox" id="guides-on" checked> Page breaks</label>
+    <button type="button" id="copytext">Copy as plain text</button>
+    <button type="button" id="another">Load another</button>
+  </div>
+  <p class="note hidden" id="tip">The dashed lines are where the paper runs out. Entries are kept
+     whole when printing, so a real break can land above a line and the page count can come out
+     higher, never lower. In the print dialog, turn headers and footers off, because the footer
+     prints your computer's file path into the PDF you send. Margins to default, scale 100%.
+     Two pages is the ceiling for most people, one for early career.</p>
+</div>
+
+<div class="sheetwrap">
+  <article class="sheet" id="sheet">
+    <div id="guides"></div>
+    <div id="doc"></div>
+  </article>
+</div>
+
+<script>
+(function () {
+  "use strict";
+
+  var el = {};
+  ["load", "pick", "file", "paste", "paste-toggle", "paste-actions", "paste-load", "demo",
+   "tools", "tip", "print", "density", "paper", "guides-on", "guides", "copytext",
+   "another", "doc", "sheet"].forEach(function (id) { el[id] = document.getElementById(id); });
+
+  /* ---------- markdown, the subset this package's resume shape uses ----------
+     Blocks:  # name, ## section, ### entry, "- " bullet, blank line, --- rule.
+     A plain text line is a paragraph, except: the first text line under # is the
+     headline and the ones after it are contact lines, the text lines under ###
+     before the first bullet are the company and dates line, and a line starting
+     with ** is its own line (skills rows). Nothing else is markdown here, on
+     purpose. Anything this parser does not know renders as the text it is.     */
+
+  // Quotes are escaped because the link URL charset below is [^)\s]+, which
+  // admits a quote. Without this, [x](https://a"onmouseover="alert(1)) closes
+  // the href and the next token parses as a live event handler, in a page that
+  // promises nothing leaves the browser.
+  function esc(s) {
+    return s.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;")
+            .replace(/"/g, "&quot;").replace(/'/g, "&#39;");
+  }
+
+  function emphasis(s) {
+    return s
+      .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
+      .replace(/(^|[\s(·])\*([^*\n]+)\*/g, "$1<em>$2</em>")
+      .replace(/`([^`]+)`/g, "<code>$1</code>");
+  }
+
+  // Links come out first and go back in last, because the emphasis passes ran
+  // over the whole string INCLUDING the href they had just written. A
+  // certification URL holding ** or a backtick came out as
+  // href="https://example.com/a<strong>b</strong>c", a dead link on a document
+  // that goes to an employer. The placeholder holds an index in a token none of
+  // the emphasis patterns can match. It is printable on purpose: a NUL byte
+  // would make this file binary to git, and an out-of-range index restores the
+  // token itself rather than the word "undefined".
+  //
+  // Known limit, same as markdown's own: the URL charset stops at the first
+  // ")", so a URL containing a closing parenthesis is truncated. Percent-encode
+  // it as %29.
+  function inline(s) {
+    var links = [];
+    var text = esc(s).replace(
+      /\[([^\]]+)\]\(((?:https?:|mailto:)[^)\s]+)\)/g,
+      function (whole, label, url) {
+        links.push('<a href="' + url + '" target="_blank" rel="noopener noreferrer">'
+          + emphasis(label) + "</a>");
+        return "@@LINK" + (links.length - 1) + "@@";
+      }
+    );
+    return emphasis(text).replace(/@@LINK(\d+)@@/g, function (whole, index) {
+      return index in links ? links[index] : whole;
+    });
+  }
+
+  function render(src) {
+    var lines = String(src).replace(/\r\n?/g, "\n").split("\n");
+    var out = [], para = [], name = "";
+    var inList = false, inEntry = false, afterH1 = 0, afterH3 = false;
+
+    function flushPara() {
+      if (para.length) { out.push("<p>" + inline(para.join(" ")) + "</p>"); para = []; }
+    }
+    function closeList() { if (inList) { out.push("</ul>"); inList = false; } }
+    function closeEntry() { if (inEntry) { out.push("</div>"); inEntry = false; } }
+    function endBlocks() { flushPara(); closeList(); }
+
+    for (var i = 0; i < lines.length; i++) {
+      var line = lines[i].replace(/\s+$/, "");
+      var trimmed = line.replace(/^\s+/, "");
+
+      /* a blank line ends a paragraph. It does not end the header block: people
+         put a blank line under a heading, and the line below it is still the
+         headline or the company line. Only a heading or a bullet ends that. */
+      if (!trimmed) { flushPara(); continue; }
+
+      if (/^---+$/.test(trimmed)) {
+        endBlocks(); closeEntry(); out.push("<hr>");
+        afterH1 = 0; afterH3 = false; continue;
+      }
+      if (/^#\s+/.test(trimmed)) {
+        endBlocks(); closeEntry();
+        var h1 = trimmed.replace(/^#\s+/, "");
+        if (!name) name = h1;
+        out.push("<h1>" + inline(h1) + "</h1>");
+        afterH1 = 1; afterH3 = false; continue;
+      }
+      if (/^##\s+/.test(trimmed)) {
+        endBlocks(); closeEntry();
+        out.push("<h2>" + inline(trimmed.replace(/^##\s+/, "")) + "</h2>");
+        afterH1 = 0; afterH3 = false; continue;
+      }
+      if (/^###\s+/.test(trimmed)) {
+        endBlocks(); closeEntry();
+        out.push('<div class="entry">');
+        inEntry = true;
+        out.push("<h3>" + inline(trimmed.replace(/^###\s+/, "")) + "</h3>");
+        afterH1 = 0; afterH3 = true; continue;
+      }
+      if (/^[-*+]\s+/.test(trimmed)) {
+        flushPara();
+        if (!inList) { out.push("<ul>"); inList = true; }
+        out.push("<li>" + inline(trimmed.replace(/^[-*+]\s+/, "")) + "</li>");
+        afterH1 = 0; afterH3 = false; continue;
+      }
+
+      /* plain text line */
+      closeList();
+      if (afterH1 === 1) {
+        flushPara();
+        out.push('<p class="headline">' + inline(trimmed) + "</p>");
+        afterH1 = 2; continue;
+      }
+      if (afterH1 === 2 || afterH3) {
+        flushPara();
+        out.push('<p class="meta">' + inline(trimmed) + "</p>");
+        continue;
+      }
+      if (/^\*\*/.test(trimmed)) {
+        flushPara();
+        out.push('<p class="kv">' + inline(trimmed) + "</p>");
+        continue;
+      }
+      para.push(trimmed);
+    }
+
+    endBlocks(); closeEntry();
+    return { html: out.join("\n"), name: name };
+  }
+
+  /* ---------- page break guides ----------
+     The print margin is 14mm top and bottom, so the usable height is the paper
+     height less 28mm. Drawn at 96dpi, which is what print CSS assumes.         */
+
+  var PAPER = {
+    letter: { h: 279.4, w: 215.9 },
+    a4: { h: 297, w: 210 }
+  };
+
+  function drawGuides() {
+    var on = el["guides-on"].checked;
+    var size = PAPER[el.paper.value] || PAPER.letter;
+    var px = Math.round((size.h - 28) * 96 / 25.4);
+    el.guides.style.backgroundImage = on
+      ? "repeating-linear-gradient(to bottom, transparent 0 " + (px - 1) + "px,"
+        + " var(--paper-line) " + (px - 1) + "px " + px + "px,"
+        + " transparent " + px + "px " + (px + 8) + "px)"
+      : "none";
+  }
+
+  var pageStyle = document.createElement("style");
+  document.head.appendChild(pageStyle);
+  function applyPaper() {
+    pageStyle.textContent = "@page { size: " + el.paper.value + "; margin: 14mm; }";
+    document.documentElement.style.setProperty("--sheetw",
+      (PAPER[el.paper.value] || PAPER.letter).w + "mm");
+    drawGuides();
+  }
+
+  var DENSITY = {
+    compact: { fs: "9.6pt", lh: "1.34", sp: "0.82" },
+    normal:  { fs: "10.4pt", lh: "1.42", sp: "1" },
+    roomy:   { fs: "11.2pt", lh: "1.5", sp: "1.2" }
+  };
+  function applyDensity() {
+    var d = DENSITY[el.density.value] || DENSITY.normal;
+    var r = document.documentElement.style;
+    r.setProperty("--fs", d.fs);
+    r.setProperty("--lh", d.lh);
+    r.setProperty("--sp", d.sp);
+  }
+
+  /* remember the two settings, so the next tailored copy opens the way the last
+     one printed. localStorage only; nothing leaves the browser. */
+  function remember() {
+    try {
+      localStorage.setItem("jobhunt.resume.view",
+        JSON.stringify({ density: el.density.value, paper: el.paper.value,
+                         guides: el["guides-on"].checked }));
+    } catch (e) { /* private mode */ }
+  }
+  function recall() {
+    var v = null;
+    try { v = JSON.parse(localStorage.getItem("jobhunt.resume.view")); } catch (e) { v = null; }
+    if (!v) return;
+    if (DENSITY[v.density]) el.density.value = v.density;
+    if (PAPER[v.paper]) el.paper.value = v.paper;
+    if (typeof v.guides === "boolean") el["guides-on"].checked = v.guides;
+  }
+
+  function show(src) {
+    var r = render(src);
+    el.doc.innerHTML = r.html;
+    document.title = r.name ? r.name + " resume" : "Resume";
+    el.load.classList.add("hidden");
+    el.tools.classList.remove("hidden");
+    el.tip.classList.remove("hidden");
+    applyDensity();
+    applyPaper();
+    window.scrollTo(0, 0);
+  }
+
+  // The drop zone accepts anything the OS hands it, and resume/original.docx
+  // lives in the same folder as master.md, so the wrong file is the expected
+  // mistake. Reading it as text renders a page of mojibake with no error.
+  function readFile(f) {
+    if (!/\.(md|markdown|txt)$/i.test(f.name)) {
+      alert("That is not a markdown file. Drop resume/master.md, or a tailored "
+        + "copy. A .docx has to be converted first: references/resume-master.md "
+        + "has the command.");
+      return;
+    }
+    var r = new FileReader();
+    r.onload = function () { show(String(r.result)); };
+    r.onerror = function () { alert("Could not read that file."); };
+    r.readAsText(f);
+  }
+
+  el.pick.addEventListener("click", function () { el.file.click(); });
+  el.file.addEventListener("change", function () {
+    if (el.file.files[0]) readFile(el.file.files[0]);
+  });
+  el["paste-toggle"].addEventListener("click", function () {
+    el.paste.classList.toggle("hidden");
+    el["paste-actions"].classList.toggle("hidden");
+    if (!el.paste.classList.contains("hidden")) el.paste.focus();
+  });
+  el["paste-load"].addEventListener("click", function () {
+    if (el.paste.value.trim()) show(el.paste.value);
+  });
+
+  ["dragenter", "dragover"].forEach(function (ev) {
+    el.load.addEventListener(ev, function (e) { e.preventDefault(); el.load.classList.add("drag"); });
+  });
+  ["dragleave", "drop"].forEach(function (ev) {
+    el.load.addEventListener(ev, function (e) { e.preventDefault(); el.load.classList.remove("drag"); });
+  });
+  el.load.addEventListener("drop", function (e) {
+    var f = e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0];
+    if (f) readFile(f);
+  });
+
+  el.density.addEventListener("change", function () { applyDensity(); remember(); });
+  el.paper.addEventListener("change", function () { applyPaper(); remember(); });
+  el["guides-on"].addEventListener("change", function () { drawGuides(); remember(); });
+  el.print.addEventListener("click", function () { window.print(); });
+  el.another.addEventListener("click", function () {
+    el.load.classList.remove("hidden");
+    el.tools.classList.add("hidden");
+    el.tip.classList.add("hidden");
+    el.doc.innerHTML = "";
+    el.file.value = "";
+  });
+  el.copytext.addEventListener("click", function () {
+    var text = el.doc.innerText || el.doc.textContent || "";
+    var done = function () {
+      el.copytext.textContent = "Copied";
+      setTimeout(function () { el.copytext.textContent = "Copy as plain text"; }, 1600);
+    };
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(done, function () { window.prompt("Copy this:", text); });
+    } else {
+      window.prompt("Copy this:", text);
+    }
+  });
+
+  el.demo.addEventListener("click", function () {
+    show([
+      "# Jordan Reyes",
+      "Automation engineer, operations background",
+      "Remote, UTC-5 · jordan@example.com · [example.com/jordan](https://example.com/jordan)",
+      "",
+      "## Summary",
+      "",
+      "Ten years in service operations, now building the automation that",
+      "replaces the queues. Example data, so load your own file over it.",
+      "",
+      "## Experience",
+      "",
+      "### Automation Lead",
+      "**Northwind Systems** · Remote · 2022 to present",
+      "",
+      "- Built the intake and routing service 40 support staff use daily",
+      "- Cut average handling time 34% across 12,000 tickets a quarter",
+      "",
+      "### Service Desk Team Lead",
+      "**Halvorsen Group** · Oslo · 2016 to 2022",
+      "",
+      "- Ran a team of 9 across two timezones",
+      "",
+      "## Skills",
+      "",
+      "**Languages** · Python, TypeScript, SQL",
+      "**Platforms** · Linux, Docker, Postgres",
+      "",
+      "## Credentials",
+      "",
+      "- Service Management Practitioner, Example Institute, 2024",
+      "",
+      "## Education",
+      "",
+      "### BSc Information Systems",
+      "**Example University** · 2012 to 2016"
+    ].join("\n"));
+  });
+
+  recall();
+  applyDensity();
+  applyPaper();
+})();
+</script>
+</body>
+</html>

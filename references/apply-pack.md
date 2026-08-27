@@ -20,9 +20,11 @@ whatever writing tooling already sounds like them.
 
 ## Inputs
 
-The posting (full text, not the summary), their current résumé, `profile.md`, and
-`answers.md` if it exists. Where the posting is thin, read the company's other
-postings for the same team; they leak what this one omitted.
+The posting (full text, not the summary), `resume/master.md`, `profile.md`, and
+`answers.md` if it exists. No master yet: build it first, from
+`references/resume-master.md`. It is one pass over whatever résumé they already
+have, and every later pack reuses it. Where the posting is thin, read the
+company's other postings for the same team; they leak what this one omitted.
 
 ## 1. Adversarial fit review
 
@@ -99,9 +101,15 @@ their role, and lead the summary line with what this posting asked for.
 
 **Mirror their language where it is true.** Same concept, their word.
 
-**Quantify what can be quantified.** Pull from the numbers table in the profile,
-which is the single source of truth. Any number here matches every other place it
-appears.
+**Quantify what can be quantified.** Numbers route through the master. The
+numbers table in `profile.md` is where a number is established and sourced;
+`resume/master.md` is where it enters the résumé; a tailored copy draws only
+from the master. Any number matches every other place it appears.
+
+A number this posting wants and the master does not have goes into the master
+first, from the profile table. Putting it straight into the tailored copy
+bypasses the number check in `references/resume-master.md`, which is the only
+thing standing between a rounded-up figure and an employer.
 
 **Cut what this posting does not want.** A résumé aimed at everything aims at
 nothing. Two pages maximum for most people, one for early career. Cutting real
@@ -112,12 +120,58 @@ title upgrades. Reordering, rewording and cutting are the only operations
 available. This is not a style preference; a fabricated résumé is fraud and it
 surfaces in reference checks.
 
-**Keep the master intact.** Tailored versions are copies. The master accumulates
-everything; each posting gets a subset.
+**Keep the master intact.** Never edit `resume/master.md` for a posting. The
+master accumulates everything and each posting gets a subset, written to its own
+file. A pack that tailors the master in place destroys the only copy holding the
+material it cut, and the next posting needs that material.
 
-Deliver the tailored résumé plus a short list of exactly what changed from the
-master and why, so the person can sanity-check it in a minute rather than
-re-reading the whole thing.
+### The output is a file
+
+One folder per application, named `<date>-<company>-<role>`, lowercase and
+hyphenated:
+
+```
+applications/2026-08-27-northwind-fde/
+  posting.md        the posting text as it read on the day
+  review.md         the five lenses and the call
+  resume.md         the tailored copy
+  letter-brief.md   output 3, below
+  changes.md        every change, labeled, and the check output
+```
+
+A sixth file, `resume.pdf`, appears when the person prints `resume.md` through
+`resume.html`. Tell them that step exists; do not do it for them, because the
+print dialog is theirs.
+
+The format of `resume.md`, the render, and the folder convention are all in
+`references/resume-master.md`.
+
+### changes.md, and why it has only three labels
+
+One line per change, each one carrying a label:
+
+```
+MOVED     Northwind bullet 3 to the top of the role. The posting leads on rollout.
+REWORDED  "integration work" to "systems integration". Their words, same claim.
+CUT       The 2013 support role. Two pages, and this posting does not want it.
+```
+
+**There is no ADDED label.** A change that cannot be labeled MOVED, REWORDED or
+CUT is a fabrication, and the fix is to revert it rather than to justify it in
+prose. Because both files are markdown, part of that rule is machine-checkable:
+`references/resume-master.md` has the commands and says which part.
+
+Then run the checks in `references/resume-master.md` and paste their output at
+the bottom of `changes.md`, including when it is empty, along with the master's
+fingerprint. A check whose result nobody wrote down did not run.
+
+Read the last part of that section too, the one naming what the checks do not
+catch. An empty output is not a clean bill of health, and lens 3 is still the
+thing that catches an inflated bullet.
+
+Where the person's own résumé formatting is the thing being sold, per the same
+file, `changes.md` is the entire deliverable and there is no render. They apply
+the labeled list to their own document in about ten minutes.
 
 ## 3. The cover letter brief
 
@@ -169,8 +223,9 @@ five lenses and the rest of this file come from. The prompt itself is short on
 purpose, but it carries what the card already knows and the assistant would
 otherwise re-derive from the posting alone: the score this run gave, the
 verdict, the gaps already found, the comp and location as listed. It also names
-the inputs, because a session that has the skill but not the folder will invent
-a résumé rather than tailor the real one.
+the inputs and the output folder, because a session that has the skill but not
+the folder will invent a résumé rather than tailor the real one, and will hand
+it back as chat text rather than as a file.
 
 Two things it cannot carry. The posting's full text stays behind the link, so an
 assistant with no way to read the page needs it pasted. And it cannot make the

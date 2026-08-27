@@ -1,12 +1,13 @@
 # Intake
 
-Runs once, produces `profile.md`, takes about fifteen minutes. Re-run any part
-of it whenever something changes.
+Runs once, produces `profile.md` and `resume/master.md`, takes about fifteen
+minutes plus the résumé conversion in section 8. Re-run any part of it whenever
+something changes.
 
 The output is what every search, score and cover letter reads. A vague profile
 returns the same generic shortlist the person could have gotten from a job board
-on their own, so the time spent here is the highest-leverage time in the whole
-skill.
+on their own, so the time spent here pays back more than any other time in the
+whole skill.
 
 ## How to run it
 
@@ -17,6 +18,10 @@ than making them retype it.
 
 Nobody enjoys answering ten questions from someone holding their résumé.
 
+A `.docx` is a zip file, so reading one needs nothing installed:
+`references/resume-master.md` has the command. Read the document out. Do not
+ask somebody to paste their own résumé into a chat window a section at a time.
+
 **One question at a time.** A form with fifteen fields is a form. Ask, listen,
 follow up where the answer opens something, move on.
 
@@ -24,16 +29,17 @@ follow up where the answer opens something, move on.
 support engineer who moved into automation, now building AI systems" teaches the
 shape. "`<your background here>`" teaches nothing.
 
-**Block on very little.** Sections 1, 2 and 3 gate the first search. Everything
-else can be filled in over the first couple of runs. Say so, so nobody feels
-they are failing an exam.
+**Block on very little.** Sections 1, 2 and 3 gate the first search. Section 8
+gates the first apply pack rather than the search, so it can wait until they
+pick a role. Everything else can be filled in over the first couple of runs.
+Say so, so nobody feels they are failing an exam.
 
 **Two of these questions are uncomfortable.** The salary floor, and the honest
 account of what they have actually shipped. Ask them plainly and without
 flinching, because a profile that is polite about both produces a search that
 wastes their time. Say why you are asking.
 
-## The seven areas
+## The eight areas
 
 ### 1. Who you are, honestly
 
@@ -133,6 +139,32 @@ Record these once so no future run re-litigates them.
 Fifteen tailored applications beat forty pasted ones, and take less time, because
 the forty produce forty rejections to read.
 
+### 8. Your résumé, as a file
+
+The one output that is not part of `profile.md`. Write `resume/master.md` from
+the document they handed over, in the shape `references/resume-master.md` fixes,
+and copy the original to `resume/original.<ext>` without deleting it.
+
+This is a conversion, not an interview. Everything needed is in the document
+already, so the only questions worth asking are about what the document got
+wrong: a stale title, a role with no dates, a number they can no longer source.
+
+Show them the result and ask what is wrong with it. Something always is, and
+correcting a draft takes a minute where dictating one takes an hour.
+
+**Two things to say out loud, once.** The master holds everything, including the
+material a given application will cut, so it is longer than a résumé they would
+send. And where the look of their résumé is part of what they are selling, the
+rendered page is not for them: `resume-master.md` names those cases and says
+what they get instead. Better said now than discovered after a render they did
+not want.
+
+**No document at all.** Some people arrive with nothing, usually early career.
+Write `resume/master.md` for them from sections 1, 2 and 5 plus the role dates,
+in the same fixed shape, and hand it back labeled as a draft to correct rather
+than as a conversion to check. It is a worse master than a converted one and it
+is a great deal better than the apply pack having no input.
+
 ## When an answer is too vague to use
 
 Four answers are load-bearing enough that a soft version poisons every later run:
@@ -173,16 +205,17 @@ Show the person a summary of what you understood, in their own terms, and let
 them correct it. One screen. This catches the misreading that would otherwise
 shape every search for a month.
 
-Then write `profile.md` from `references/profile-template.md` and tell them
-where it is and that they can edit it directly. It is their file, in plain
-markdown, and it should never feel like a black box.
+Then write `profile.md` from `references/profile-template.md`, and
+`resume/master.md` per section 8 where they handed over a résumé. Tell them
+where both are and that they can edit them directly. They are their files, in
+plain markdown, and neither should ever feel like a black box.
 
 ## Keeping it current
 
 Re-open the profile when any of these happen: a certification lands, a system
-ships, the floor moves, a target role type stops feeling right, an exclusion gets
-added after a bad experience, or a run surfaces a question the profile could not
-answer.
+ships, a role starts or ends, the floor moves, a target role type stops feeling
+right, an exclusion gets added after a bad experience, or a run surfaces a
+question the profile could not answer.
 
 That last one is the important one. Every time a search has to guess, the guess
 gets confirmed with the person and then written back into the profile, so the

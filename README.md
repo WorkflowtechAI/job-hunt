@@ -28,6 +28,21 @@ pool, the gap hunter), then builds a tailored résumé from your real one and a
 brief of what your cover letter has to hit. It ends with a call, and *skip this
 one* is a real answer.
 
+The tailored résumé comes out as a file, not as text you retype. Your master
+résumé lives as one markdown file, so tailoring is an edit with a diff rather
+than a rewrite, and every application gets its own folder holding the posting,
+the review, the tailored copy, the letter brief, and a change log that labels
+each edit MOVED, REWORDED or CUT. There is no ADDED label, and three one-line
+commands catch most of what would need one: any number, any job title or
+employer, any credential or whole section that is in the tailored copy and not in
+your master. They do not catch a bullet that was quietly inflated, and the doc
+says so where the commands are. For a PDF, drop the file on
+`resume.html` and print it. That is the entire rendering path, and it installs
+nothing, because your browser already prints to PDF. If the look of your résumé
+is part of what you are selling, say so and skip the render: you still get the
+labeled change list to apply to your own document, which is the ten minutes that
+actually costs you something.
+
 The brief is deliberately not a letter. It carries the opening angle, the points
 in order with evidence attached, what to address head-on and what to leave out.
 You write the sentences, because a letter in a borrowed voice gets read back to
@@ -67,15 +82,20 @@ skills or instructions folder work the same way; point yours at `SKILL.md`.
 skill.
 
 ```bash
-mkdir -p ~/job-hunt/runs
-cp ~/.claude/skills/job-hunt/dashboard.html ~/job-hunt/
+mkdir -p ~/job-hunt/runs ~/job-hunt/resume ~/job-hunt/applications
+cp ~/.claude/skills/job-hunt/{dashboard,resume}.html ~/job-hunt/
+```
+```powershell
+New-Item -ItemType Directory -Force "$HOME\job-hunt\runs", "$HOME\job-hunt\resume", "$HOME\job-hunt\applications" | Out-Null
+Copy-Item "$HOME\.claude\skills\job-hunt\dashboard.html", "$HOME\.claude\skills\job-hunt\resume.html" "$HOME\job-hunt\"
 ```
 
 Anywhere works. A private git repo is a good home: your whole search, versioned
 and portable.
 
 **3. Run the intake.** Point the assistant at your CV and say *"run the job-hunt
-intake"*. It writes `~/job-hunt/profile.md`, which is plain markdown you can edit.
+intake"*. It writes `~/job-hunt/profile.md` and `~/job-hunt/resume/master.md`,
+both plain markdown you can edit. A `.docx` is fine. It gets read, not retyped.
 
 **4. First search.** Say *"refresh my jobs"*. It takes a while, because the
 sourcing is wide and every posting gets checked. Then open `dashboard.html` and
@@ -87,7 +107,8 @@ drop the run file on it.
 |---|---|
 | "refresh my jobs" | A full search run and a new shortlist |
 | "am I a fit for this?" + url | One posting scored, with the gaps named |
-| "apply pack for the Northwind role" | Adversarial review, tailored résumé, cover letter brief |
+| "apply pack for the Northwind role" | Adversarial review, tailored résumé, cover letter brief, as files in one folder |
+| "render my resume" | Your markdown poured into a printable page, ready to save as PDF |
 | "prep me for Thursday's interview" | A prep document and a one-page sheet |
 | "draft openers for this week" | Contract outreach, for your review, unsent |
 | "weekly scoreboard" | Applications, replies, interviews, and what to change |
@@ -97,9 +118,15 @@ drop the run file on it.
 ```
 ~/job-hunt/
   profile.md          the intake output, edit it any time
+  resume/
+    master.md         your résumé as markdown, everything in it
+    original.docx     whatever you arrived with, kept
   runs/2026-08-27.json  one search run
+  applications/
+    2026-08-27-northwind-fde/   posting, review, tailored résumé, brief, changes
   pipeline.json       application status, exported from the dashboard
   dashboard.html      opens in a browser, no server
+  resume.html         the same, for printing a résumé
 ```
 
 ## What is in this package
@@ -108,13 +135,16 @@ drop the run file on it.
 |---|---|
 | `SKILL.md` | The doctrine: search loop, run format, link hygiene, guardrails |
 | `dashboard.html` | Shortlist and application pipeline, local only |
+| `resume.html` | Renders a résumé markdown file as a page you print to PDF, local only |
 | `index.html` | This page, in a browser |
 | `example-run.json` | A run file to look at, and to test the dashboard with |
+| `example-resume.md` | A résumé in the master format, and a file to test `resume.html` with |
 | `references/intake.md` | The guided intake |
 | `references/profile-template.md` | The profile it fills in |
 | `references/sourcing-map.md` | Where to look, and the rule for each channel |
 | `references/scoring-rubric.md` | Six dimensions, calibration bands, what never gets filtered |
 | `references/apply-pack.md` | Adversarial fit review, tailored résumé, cover letter brief |
+| `references/resume-master.md` | The master résumé format, where tailored copies live, and how to prove one added nothing |
 | `references/compensation.md` | How to research a real salary band before answering |
 | `references/keyed-sources.md` | Optional: using a paid job-data API you already pay for |
 | `references/answer-bank.md` | Reusable interview and application answers |
@@ -126,7 +156,9 @@ drop the run file on it.
 - **Never applies for you.** A run produces a shortlist and stops. You click every
   apply link and send every message. That is the design, not a limitation.
 - **Never invents a claim.** No borrowed projects, no rounded-up numbers, no
-  credential-in-progress described as held.
+  credential-in-progress described as held. A tailored résumé is a file sitting
+  next to your master, so most of this is checkable with a command instead of
+  trusted, and the package is specific about which part is not.
 - **Never ships your data anywhere of its own.** Profile, CV, runs and pipeline
   are files in your folder, and the dashboard uses browser local storage with no
   network code in it. Your assistant still sends what it reads to its model
@@ -140,8 +172,8 @@ drop the run file on it.
 This is a search that works, not a machine that gets you hired. A good run
 surfaces two or three roles genuinely worth an application; a thin week surfaces
 none, and it says so rather than padding the list. You still do the interviews,
-the follow-ups, the decisions, and about ten minutes of tailoring per
-application.
+the follow-ups, the decisions, and the read-through on every tailored résumé
+before it goes out.
 
 ## Where this came from
 
