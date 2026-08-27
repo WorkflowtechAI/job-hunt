@@ -263,6 +263,40 @@
     }).join("|");
   }
 
+  // The clipboard prompt. "apply pack" is the phrase that triggers the skill;
+  // everything after it is context this card is already holding and the
+  // assistant would otherwise re-derive from the posting alone. Naming the
+  // inputs matters most: without it, a session that has the skill but not the
+  // folder invents a résumé instead of tailoring the real one.
+  function packPrompt(p, url) {
+    var lines = ["Build the apply pack for this role: "
+      + (p.title || "role") + " at " + (p.company || "unknown company")
+      + (url ? " (" + url + ")" : "") + "."];
+
+    var facts = [];
+    if (p.location) facts.push("Location: " + p.location);
+    if (p.salary) facts.push("Comp listed: " + p.salary);
+    if (p.jobType) facts.push("Type: " + p.jobType);
+    if (p.sourceType) facts.push("Source: " + p.sourceType);
+    if (facts.length) lines.push(facts.join(". ") + ".");
+
+    if (typeof p.score === "number") lines.push("This run scored it " + p.score + "/100.");
+    if (p.verdict) lines.push("Verdict: " + p.verdict);
+
+    var gaps = arr(p.gaps).filter(function (g) { return typeof g === "string" && g.trim(); });
+    if (gaps.length) {
+      lines.push("Gaps this run already found, for the review to test rather than "
+        + "rediscover: " + gaps.join("; ") + ".");
+    }
+
+    lines.push("Read the posting in full, plus profile.md, my master résumé, and "
+      + "answers.md if it exists. Then all three outputs: the adversarial fit "
+      + "review with all five lenses, a tailored résumé built only from what is "
+      + "already true, and a cover letter brief. Do not write the letter.");
+
+    return lines.join("\n");
+  }
+
   function node(tag, cls, text) {
     var n = document.createElement(tag);
     if (cls) n.className = cls;
@@ -451,10 +485,7 @@
     pack.title = "Copy a prompt that asks your assistant for the adversarial review, "
                + "a tailored résumé, and a cover letter brief";
     pack.addEventListener("click", function () {
-      var text = "Build the apply pack for this role: "
-        + (p.title || "role") + " at " + (p.company || "unknown company")
-        + (url ? " (" + url + ")" : "")
-        + ". Adversarial fit review, tailored resume, cover letter brief.";
+      var text = packPrompt(p, url);
       var done = function () { pack.textContent = "Copied"; setTimeout(function () { pack.textContent = "Apply pack"; }, 1600); };
       if (navigator.clipboard && navigator.clipboard.writeText) {
         navigator.clipboard.writeText(text).then(done, function () { window.prompt("Copy this:", text); });

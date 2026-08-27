@@ -162,6 +162,17 @@ improvising into a box.
 
 ## From the dashboard
 
-Each card has an **Apply pack** button that puts the role's title, company and
-URL on the clipboard in a form the assistant can act on. Paste, and the pack
-starts.
+Each card has an **Apply pack** button that puts a prompt on the clipboard.
+Paste it into an assistant that has this skill installed and the pack starts:
+the phrase "apply pack" is what triggers the skill, and the skill is where the
+five lenses and the rest of this file come from. The prompt itself is short on
+purpose, but it carries what the card already knows and the assistant would
+otherwise re-derive from the posting alone: the score this run gave, the
+verdict, the gaps already found, the comp and location as listed. It also names
+the inputs, because a session that has the skill but not the folder will invent
+a résumé rather than tailor the real one.
+
+Two things it cannot carry. The posting's full text stays behind the link, so an
+assistant with no way to read the page needs it pasted. And it cannot make the
+inputs exist: run the paste from the folder holding `profile.md` and the master
+résumé, or hand them over when asked.
