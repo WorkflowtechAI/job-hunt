@@ -94,8 +94,9 @@ Anywhere works. A private git repo is a good home: your whole search, versioned
 and portable.
 
 **3. Run the intake.** Point the assistant at your CV and say *"run the job-hunt
-intake"*. It writes `~/job-hunt/profile.md` and `~/job-hunt/resume/master.md`,
-both plain markdown you can edit. A `.docx` is fine. It gets read, not retyped.
+intake"*. It writes `~/job-hunt/profile.md`, `~/job-hunt/resume/master.md` and
+`~/job-hunt/forms.md`, all plain markdown you can edit. A `.docx` is fine. It gets
+read, not retyped.
 
 **4. First search.** Say *"refresh my jobs"*. It takes a while, because the
 sourcing is wide and every posting gets checked. Then open `dashboard.html` and
@@ -111,6 +112,7 @@ drop the run file on it.
 | "render my resume" | Your markdown poured into a printable page, ready to save as PDF |
 | "prep me for Thursday's interview" | A prep document and a one-page sheet |
 | "draft openers for this week" | Contract outreach, for your review, unsent |
+| "what does this form want?" | Which of your stored answers this form needs, and which are still empty |
 | "weekly scoreboard" | Applications, replies, interviews, and what to change |
 
 ## Your folder
@@ -118,6 +120,7 @@ drop the run file on it.
 ```
 ~/job-hunt/
   profile.md          the intake output, edit it any time
+  forms.md            the fields every form asks for, decided once
   resume/
     master.md         your résumé as markdown, everything in it
     original.docx     whatever you arrived with, kept
@@ -147,7 +150,8 @@ drop the run file on it.
 | `references/resume-master.md` | The master résumé format, where tailored copies live, and how to prove one added nothing |
 | `references/compensation.md` | How to research a real salary band before answering |
 | `references/keyed-sources.md` | Optional: using a paid job-data API you already pay for |
-| `references/answer-bank.md` | Reusable interview and application answers |
+| `references/answer-bank.md` | Reusable interview answers and the free-text form boxes |
+| `references/form-bank.md` | The fields every application form asks for, decided once and copied from |
 | `references/interview-prep.md` | Per-interview prep and the one-pager |
 | `references/contract-track.md` | Contract outreach |
 
@@ -155,12 +159,18 @@ drop the run file on it.
 
 - **Never applies for you.** A run produces a shortlist and stops. You click every
   apply link and send every message. That is the design, not a limitation.
+- **Never fills in a form.** Not a field, not a dropdown, not a screening
+  question, and nothing driving a browser at an application. It tells you which
+  fields this form wants and which of your answers are still empty; you copy and
+  paste. And it never asks, infers, or reads the equal-opportunity questions:
+  those four rows are yours, and nothing here looks at them.
 - **Never invents a claim.** No borrowed projects, no rounded-up numbers, no
   credential-in-progress described as held. A tailored résumé is a file sitting
   next to your master, so most of this is checkable with a command instead of
   trusted, and the package is specific about which part is not.
-- **Never ships your data anywhere of its own.** Profile, CV, runs and pipeline
-  are files in your folder, and the dashboard uses browser local storage with no
+- **Never ships your data anywhere of its own.** Your profile, CV, résumé, runs,
+  pipeline and form answers are all files in your folder, and the dashboard uses
+  browser local storage with no
   network code in it. Your assistant still sends what it reads to its model
   provider, so install this into one you would trust with a résumé.
 - **Never links a job you have to pay to read.** Job-seeker paywalls get traced to

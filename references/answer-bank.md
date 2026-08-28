@@ -87,13 +87,17 @@ borrowed.
 
 ## Application form answers
 
-The recurring fields, drafted once:
+Every free-text box on a form is this file's job. The field-shaped ones (dates,
+years per skill, authorization, notice period, the demographic selections) live in
+`forms.md`, built from `references/form-bank.md`, because a paragraph and a date
+are not the same kind of answer and a file holding both becomes prose.
+
+The recurring free-text fields, drafted once:
 
 - Most relevant project, with what it does and what it changed.
-- Years of experience in the specific thing. The honest bounded number, always.
-  The longer career does its work in prose, not in a number field.
 - Depth in the two or three named technologies that keep recurring in the
-  person's target postings.
+  person's target postings. The number of years goes in `forms.md`; what the
+  depth actually consists of goes here.
 - Why this company. The one field that visibly cannot be reused, and the one most
   people reuse.
 - Most impressive thing in your career.

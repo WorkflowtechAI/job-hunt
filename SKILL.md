@@ -25,6 +25,8 @@ A folder of plain files. Default `~/job-hunt/`, anywhere works.
 |---|---|---|
 | `profile.md` | The candidate profile: identity, target roles, hard limits, honest claims | The intake, once. Edited whenever reality changes |
 | `resume/master.md` | The master résumé as markdown: everything, in one file | The intake, once. Edited when a role or a number changes |
+| `forms.md` | The field-shaped answers every application form asks for: dates, years per skill, authorization, availability | The intake, once. A line added after any form that asked something new |
+| `answers.md` | The reusable spoken and free-text answers, in two registers | Built on request, rewritten as they get better at telling them |
 | `runs/<date>.json` | One search run: the scored shortlist | Each search |
 | `applications/<date>-<company>-<role>/` | One application: the posting, the review, the tailored résumé, the letter brief, the change log | Each apply pack |
 | `pipeline.json` | Application status per posting | Exported from the dashboard |
@@ -242,10 +244,18 @@ sector or product. Most people clear craft nearly everywhere and lose on domain.
 Skip when the domain is the seat itself, roughly four or more domain bullets they
 cannot touch. Apply when the domain gaps are learnable and the craft is a match.
 
-**Years fields get the honest bounded number.** Where a form asks years of
-experience in a thing, answer for that thing, and let the longer career do its
-work in prose. Seniority inflation in postings ("7+ years of LLM experience" in a
-field that age) is a template artifact, not a gate. Read it as "senior" and apply.
+**Years fields get the honest bounded number**, and it is the same number every
+time, because it is written down. `forms.md` holds one row per named skill, built
+from `references/form-bank.md`. Two applications to one company carrying four
+years in March and seven in May is a discrepancy in a record the person cannot
+see. Seniority inflation in postings ("7+ years of LLM experience" in a field
+that age) is a template artifact, not a gate. Read it as "senior" and apply.
+
+**Nothing types into a form.** Not a field, not a dropdown, not a screening
+question that looks like a formality, and no browser automation pointed at an
+application. The person copies out of `forms.md` and pastes. What this skill does
+is tell them which fields this form will want and which of theirs are still
+empty.
 
 **Application and interview answers:** `references/answer-bank.md` builds the
 person's reusable answers once, every one of them citing the numbers table in
@@ -269,14 +279,19 @@ the posted role is a poor fit.
 
 ## Guardrails
 
-1. **Never auto-apply.** A run produces a shortlist and stops. A human sends
-   every application and every message. No exceptions, no "it was obviously a
-   yes."
+1. **Never auto-apply, and never fill a form.** A run produces a shortlist and
+   stops. A human sends every application and every message. No exceptions, no
+   "it was obviously a yes." Filling forty fields and leaving the submit button
+   to them is not compliance with this rule: nothing types into a form, selects
+   an option, answers a screening question, or drives a browser at an
+   application. The person copies out of `forms.md` and pastes.
 2. **Honest claims only.** No invented projects, no borrowed client stories, no
    inflated numbers, no credentials in progress described as held. Every claim
    has to survive the interview it gets the person into.
-3. **Personal data stays local.** The profile, the CV, and the pipeline live in
-   the person's folder. Do not post them anywhere.
+3. **Personal data stays local.** Everything the person owns lives in their
+   folder: the profile, the CV and the master résumé, the runs, the pipeline, and
+   `forms.md`, which is the most sensitive file of the set. Do not post any of it
+   anywhere.
 4. **Never print, echo or return an API key.** Keys live in the environment, per
    `references/keyed-sources.md`, and never in `profile.md`, a run file, or the
    dashboard. When one is missing, the whole answer is "set `FOORILLA_API_KEY`
@@ -289,6 +304,13 @@ the posted role is a poor fit.
 7. **A failed score is not a low score.** `score: null` with a note, never 0. A
    tooling failure that renders as a bad job costs the trust the whole ordering
    runs on, and it costs it silently.
+8. **The self-identification rows are never asked and never read.** Race, gender,
+   veteran status and disability status are not asked at intake or later, not
+   inferred from anything, and not nudged in either direction. Where the person
+   has written one in themselves, nothing reads it: not into a score, a verdict,
+   a letter brief, the fit review's comparison against the likely pool, a summary
+   back to them, or any file under `applications/`.
+   `references/form-bank.md` says why.
 
 ## Weekly scoreboard
 

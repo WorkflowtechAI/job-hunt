@@ -1,8 +1,8 @@
 # Intake
 
-Runs once, produces `profile.md` and `resume/master.md`, takes about fifteen
-minutes plus the résumé conversion in section 8. Re-run any part of it whenever
-something changes.
+Runs once, produces `profile.md`, `resume/master.md` and `forms.md`, takes about
+fifteen minutes plus the résumé conversion in section 8. Re-run any part of it
+whenever something changes.
 
 The output is what every search, score and cover letter reads. A vague profile
 returns the same generic shortlist the person could have gotten from a job board
@@ -30,16 +30,18 @@ support engineer who moved into automation, now building AI systems" teaches the
 shape. "`<your background here>`" teaches nothing.
 
 **Block on very little.** Sections 1, 2 and 3 gate the first search. Section 8
-gates the first apply pack rather than the search, so it can wait until they
-pick a role. Everything else can be filled in over the first couple of runs.
-Say so, so nobody feels they are failing an exam.
+and most of section 9 gate the first application rather than the search, so they
+can wait until a role is picked; section 9's four questions are quick enough to
+ask while the résumé is being converted, and the rest of that file stays empty
+until a real form asks. Everything else can be filled in over the first couple of
+runs. Say so, so nobody feels they are failing an exam.
 
 **Two of these questions are uncomfortable.** The salary floor, and the honest
 account of what they have actually shipped. Ask them plainly and without
 flinching, because a profile that is polite about both produces a search that
 wastes their time. Say why you are asking.
 
-## The eight areas
+## The nine areas
 
 ### 1. Who you are, honestly
 
@@ -141,7 +143,7 @@ the forty produce forty rejections to read.
 
 ### 8. Your résumé, as a file
 
-The one output that is not part of `profile.md`. Write `resume/master.md` from
+The first output that is not part of `profile.md`. Write `resume/master.md` from
 the document they handed over, in the shape `references/resume-master.md` fixes,
 and copy the original to `resume/original.<ext>` without deleting it.
 
@@ -164,6 +166,33 @@ Write `resume/master.md` for them from sections 1, 2 and 5 plus the role dates,
 in the same fixed shape, and hand it back labeled as a draft to correct rather
 than as a conversion to check. It is a worse master than a converted one and it
 is a great deal better than the apply pack having no input.
+
+### 9. The fields every form asks for
+
+The second output that is not part of `profile.md`. Write `forms.md` from
+`references/form-bank.md`, which holds the template and the rules.
+
+Almost none of this is a question. Authorization, availability, hours, employment
+versus contract and the compensation dates all come from sections 3 and 4,
+already stated in prose; restate them in field shape and confirm the restatement.
+Asking a second time is how an intake earns a reputation. The identity block and
+eight to twelve rows of years-per-skill come out of the CV as a draft they
+correct.
+
+**Four questions, and only these.** The name as it appears on official documents,
+where the CV shows a different one. A real earliest start date, as a date rather
+than "two weeks", because "two weeks" written three weeks ago is wrong. A phone
+number with country code, where the CV omits it. And whatever they want changed
+on the skill-years draft.
+
+**Do not ask the demographic questions.** Not here, not later, not as an optional
+extra. `form-bank.md` says why, ships those rows reading "my call, at the form",
+and that is where they stay unless the person writes something else in
+themselves. Do not infer a value from a name, a document or a country, and do not
+offer an opinion on whether answering helps.
+
+References are not a day-one question either. Three other people have to agree
+first, and asking for that on day one stalls the search.
 
 ## When an answer is too vague to use
 
@@ -205,10 +234,10 @@ Show the person a summary of what you understood, in their own terms, and let
 them correct it. One screen. This catches the misreading that would otherwise
 shape every search for a month.
 
-Then write `profile.md` from `references/profile-template.md`, and
-`resume/master.md` per section 8 where they handed over a résumé. Tell them
-where both are and that they can edit them directly. They are their files, in
-plain markdown, and neither should ever feel like a black box.
+Then write `profile.md` from `references/profile-template.md`, `resume/master.md`
+per section 8, and `forms.md` per section 9. Tell them where all three are and
+that they can edit them directly. They are their files, in plain markdown, and
+none of them should ever feel like a black box.
 
 ## Keeping it current
 

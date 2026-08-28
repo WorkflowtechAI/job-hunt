@@ -21,7 +21,7 @@ whatever writing tooling already sounds like them.
 ## Inputs
 
 The posting (full text, not the summary), `resume/master.md`, `profile.md`, and
-`answers.md` if it exists. No master yet: build it first, from
+`answers.md` and `forms.md` if they exist. No master yet: build it first, from
 `references/resume-master.md`. It is one pass over whatever résumé they already
 have, and every later pack reuses it. Where the posting is thin, read the
 company's other postings for the same team; they leak what this one omitted.
@@ -212,7 +212,10 @@ Two standing rules for whatever gets written from it. Every claim that can carry
 a number carries one. And compensation, engagement structure and availability
 terms stay out of the letter entirely; those go in the application's salary field
 and the first call. Research that number with `compensation.md` rather than
-improvising into a box.
+improvising into a box. The rest of the form's fields come off `forms.md` rather
+than out of memory, and they get handed over for the person to paste, never
+placed: `references/form-bank.md` says why the same field answered twice from
+memory gets answered two different ways, and where the line is.
 
 ## From the dashboard
 
