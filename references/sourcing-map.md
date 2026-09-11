@@ -80,6 +80,11 @@ Find the equivalent board for the person's field and add it to the profile.
 RemoteOK and the remote-first boards fill the same slot for location rather than
 discipline.
 
+**Named sources: `source-directory.md`.** This file is the doctrine, that one is
+the list. 113 sources with a link each, grouped by the four things this map calls
+tiers, and marked for which expose a free machine-readable feed. Start there
+rather than from a blank search box, then prune it to the person's field.
+
 ## Tier 4: aggregators and alerts
 
 Indeed, and whatever else surfaces volume. Also job-alert emails, which are an
@@ -114,6 +119,13 @@ Search `<company> careers <title>` before settling. `sourceType: "company-site"`
 when confirmed there, `"job-board"` when only the board has it, `"alert-only"`
 when it cannot be confirmed anywhere but came from a real alert. Freshness counts
 at least as much as provenance.
+
+**Force the locale on any automated fetch.** Indeed, ZipRecruiter and Talent.com
+geo-redirect on the requesting IP without saying so: `www.indeed.com` becomes
+the local edition, `www.ziprecruiter.com` becomes another country's. A run that
+does not pin the locale searches the wrong country, and the result looks exactly
+like an ordinary empty search rather than an error. Check this before concluding
+a board has nothing.
 
 **Stay inside terms of service.** LinkedIn specifically: its job-alert emails are
 the supported path, and scraping the site risks the account that carries the

@@ -78,7 +78,9 @@ with jobs they cannot take.
 
 ### 2. Source wide
 
-Full channel list and the rules for each: `references/sourcing-map.md`.
+Full channel list and the rules for each: `references/sourcing-map.md`. The
+named sources to actually open, 113 of them with a link each and a note on which
+expose a free machine-readable feed: `references/source-directory.md`.
 
 The short version: company career pages and ATS boards first, then talent and
 contract platforms, then aggregators, then whatever job-alert email lands in
