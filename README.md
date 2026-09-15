@@ -102,6 +102,15 @@ read, not retyped.
 sourcing is wide and every posting gets checked. Then open `dashboard.html` and
 drop the run file on it.
 
+**5. Optional: stop retyping your LinkedIn.** Every application asks for your
+profile URL, and not one of them prefills the half that is identical for
+everybody. `extension/` is a browser extension that does that and nothing else.
+Load it unpacked from `chrome://extensions`, or from `about:debugging` in
+Firefox, click its toolbar icon once to save your profile, and the field arrives
+filled in. Leave the profile blank and it fills `https://www.linkedin.com/in/`,
+so only your slug is left to type. It fills a field only when the form itself
+calls that field LinkedIn. `extension/README.md` is the one-minute version.
+
 ## Week to week
 
 | Say this | You get |
@@ -154,6 +163,7 @@ drop the run file on it.
 | `references/form-bank.md` | The fields every application form asks for, decided once and copied from |
 | `references/interview-prep.md` | Per-interview prep and the one-pager |
 | `references/contract-track.md` | Contract outreach |
+| `extension/` | Optional browser extension: fills the LinkedIn field on application forms, and nothing else |
 
 ## What it will not do
 
@@ -163,7 +173,10 @@ drop the run file on it.
   question, and nothing driving a browser at an application. It tells you which
   fields this form wants and which of your answers are still empty; you copy and
   paste. And it never asks, infers, or reads the equal-opportunity questions:
-  those four rows are yours, and nothing here looks at them.
+  those four rows are yours, and nothing here looks at them. `extension/` is the
+  one exception, and a deliberately small one: you install it yourself, it runs
+  in your browser rather than in the assistant, and it fills a single field with
+  a URL you typed into it. One field, on forms that ask for it by name.
 - **Never invents a claim.** No borrowed projects, no rounded-up numbers, no
   credential-in-progress described as held. A tailored résumé is a file sitting
   next to your master, so most of this is checkable with a command instead of

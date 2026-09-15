@@ -170,6 +170,7 @@
     <tr><td class="mono">references/form-bank.md</td><td>The field-shaped ones among the forty things every application form asks: years per skill, authorization, notice period, start date. Decided once, copied from, never typed in for you. It never asks or reads the equal-opportunity questions</td></tr>
     <tr><td class="mono">references/interview-prep.md</td><td>Per-interview prep, and the one-pager you read ten minutes before</td></tr>
     <tr><td class="mono">references/contract-track.md</td><td>Engagements you propose to companies that never posted a job</td></tr>
+    <tr><td class="mono">extension/</td><td>Optional, and installed by you rather than by the skill: a browser extension that fills the LinkedIn field on application forms, and nothing else</td></tr>
   </table>
 
   <h2>Setup</h2>
@@ -212,6 +213,19 @@ cp ~/.claude/skills/job-hunt/{dashboard,resume}.html ~/job-hunt/</code></pre>
   <p>Say <em>"refresh my jobs"</em>. Expect it to take a while: the sourcing is
     wide and every posting gets opened and checked. Then open the dashboard and
     drop the run file on it.</p>
+
+  <h3>5. Optional: stop retyping your LinkedIn</h3>
+  <p>Every application asks for your profile URL, and not one of them prefills
+    the half that is identical for everybody. <code>extension/</code> is a
+    browser extension that does that and nothing else. Load it unpacked from
+    <code>chrome://extensions</code>, or from <code>about:debugging</code> in
+    Firefox, then click its toolbar icon once to save your profile. Leave the
+    profile blank and it fills
+    <code>https://www.linkedin.com/in/</code> instead, so only your slug is left
+    to type. It fills a field only where the form itself calls that field
+    LinkedIn: a box labelled <em>Website</em>, <em>Contact</em> or
+    <em>Social</em> is left alone.
+    <code>extension/README.md</code> is the one-minute version.</p>
 
   <div class="box good">
     <h3>Where the person you are working with matters</h3>
