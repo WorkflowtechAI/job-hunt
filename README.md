@@ -108,8 +108,9 @@ everybody. `extension/` is a browser extension that does that and nothing else.
 Load it unpacked from `chrome://extensions`, or from `about:debugging` in
 Firefox, click its toolbar icon once to save your profile, and the field arrives
 filled in. Leave the profile blank and it fills `https://www.linkedin.com/in/`,
-so only your slug is left to type. It fills a field only when the form itself
-calls that field LinkedIn. `extension/README.md` is the one-minute version.
+so only your slug is left to type. A box the form labels as something else, like
+*Website* or *Social*, is left alone whatever the markup underneath it says.
+`extension/README.md` is the one-minute version.
 
 ## Week to week
 
