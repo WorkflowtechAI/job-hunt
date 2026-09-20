@@ -4,7 +4,7 @@
   'use strict';
 
   var mode = new URLSearchParams(location.search).get('mode') || 'full';
-  var PROFILE = 'https://www.linkedin.com/in/david-george-braun';
+  var PROFILE = 'https://www.linkedin.com/in/jane-q-public';
   var PREFIX = 'https://www.linkedin.com/in/';
 
   var stored = mode === 'prefix' ? { profileUrl: '', autofill: true } : { profileUrl: PROFILE, autofill: true };

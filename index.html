@@ -161,15 +161,18 @@
     <tr><td class="mono">references/intake.md</td><td>The guided intake that builds your profile</td></tr>
     <tr><td class="mono">references/profile-template.md</td><td>The profile the intake fills in</td></tr>
     <tr><td class="mono">references/sourcing-map.md</td><td>Where to look, in priority order, and the rule for each channel</td></tr>
+    <tr><td class="mono">references/source-directory.md</td><td>The named sources to open, 113 with a link each, and which expose a free machine-readable feed</td></tr>
     <tr><td class="mono">references/scoring-rubric.md</td><td>The six dimensions, the calibration bands, what happens when a posting publishes no salary, and what never gets filtered out</td></tr>
     <tr><td class="mono">references/resume-master.md</td><td>Your résumé as one markdown file: how a .docx gets read in, where each tailored copy lives on disk, how it renders to a PDF with nothing installed, and the commands that check a tailored copy added nothing</td></tr>
     <tr><td class="mono">references/apply-pack.md</td><td>Per role you pick: an adversarial fit review from five hostile readers, a tailored résumé, and a brief of what your cover letter should hit</td></tr>
     <tr><td class="mono">references/compensation.md</td><td>How to research a real salary band before you answer the question</td></tr>
     <tr><td class="mono">references/keyed-sources.md</td><td>Optional, and off by default: how to hand the search a paid job-data API key you already have, and where that key must never go</td></tr>
+    <tr><td class="mono">references/jev-selection.md</td><td>Optional, and only with your own TypeSafe key: what the semantic skill match sends, how the score uses the answer, and the benchmark it rests on, limits included</td></tr>
     <tr><td class="mono">references/answer-bank.md</td><td>Your reusable interview answers and the free-text form boxes, built once</td></tr>
     <tr><td class="mono">references/form-bank.md</td><td>The field-shaped ones among the forty things every application form asks: years per skill, authorization, notice period, start date. Decided once, copied from, never typed in for you. It never asks or reads the equal-opportunity questions</td></tr>
     <tr><td class="mono">references/interview-prep.md</td><td>Per-interview prep, and the one-pager you read ten minutes before</td></tr>
     <tr><td class="mono">references/contract-track.md</td><td>Engagements you propose to companies that never posted a job</td></tr>
+    <tr><td class="mono">scripts/jev_match.py</td><td>Optional, and the only code that sends anything off your machine: with your own TypeSafe key, sends a posting's text and your skill names to Jev and writes one number per skill to <code>jev-match.json</code>. <code>scripts/jev_client.py</code> beside it is the API call. Without a key it prints one line and exits</td></tr>
     <tr><td class="mono">extension/</td><td>Optional, and installed by you rather than by the skill: a browser extension that fills the LinkedIn field on application forms, and nothing else</td></tr>
   </table>
 
@@ -222,10 +225,26 @@ cp ~/.claude/skills/job-hunt/{dashboard,resume}.html ~/job-hunt/</code></pre>
     Firefox, then click its toolbar icon once to save your profile. Leave the
     profile blank and it fills
     <code>https://www.linkedin.com/in/</code> instead, so only your slug is left
-    to type. A box the form labels as something else &mdash; <em>Website</em>,
-    <em>Contact</em>, <em>Social</em> &mdash; is left alone, whatever the markup
+    to type. A box the form labels as something else, like <em>Website</em>,
+    <em>Contact</em>, <em>Social</em>, is left alone, whatever the markup
     underneath it says.
     <code>extension/README.md</code> is the one-minute version.</p>
+
+  <h3>6. Optional: a semantic skill match</h3>
+  <p>If you already have a TypeSafe key, set <code>TYPESAFE_API_KEY</code> in a
+    <code>.env</code> file in your job-hunt folder, next to
+    <code>profile.md</code>, and add <code>.env</code> to
+    <code>.gitignore</code>. Then, when a posting gets scored, your assistant can
+    run <code>scripts/jev_match.py</code> from where the skill is installed. It sends two things and
+    nothing else: the posting's text and the skill names from your
+    <code>forms.md</code>. Not your profile, not your résumé, not the
+    self-identification rows. Back comes one number per skill, how much the
+    posting wants it, written to <code>jev-match.json</code> beside the posting.
+    Your assistant reads that as evidence for two of the six scoring dimensions
+    and still writes the score itself. Without a key nothing changes: the script
+    prints one line and exits, and scoring goes by the rubric as before.
+    <code>references/jev-selection.md</code> has the measurement behind it,
+    limits included.</p>
 
   <div class="box good">
     <h3>Where the person you are working with matters</h3>
@@ -245,7 +264,10 @@ cp ~/.claude/skills/job-hunt/{dashboard,resume}.html ~/job-hunt/</code></pre>
       has to survive the interview it gets you.</li>
     <li><b>It never ships your data anywhere of its own.</b> The profile, the CV,
       the runs and the pipeline are files in your folder, and the dashboard uses
-      your browser's local storage with no network code in it at all. Your
+      your browser's local storage with no network code in it at all. One opt-in
+      exception: with your own TypeSafe key set,
+      <code>scripts/jev_match.py</code> sends a posting's text and your skill
+      names to Jev, and nothing else. Without the key it sends nothing. Your
       assistant still sends what it reads to its model provider, so install this
       into one you would trust with a résumé.</li>
     <li><b>It never sends you to a job you have to pay to read.</b> Boards that
@@ -286,7 +308,10 @@ cp ~/.claude/skills/job-hunt/{dashboard,resume}.html ~/job-hunt/</code></pre>
     contract search, then generalized so it does not need to be his. The rules in
     it that look oddly specific are the ones that came from a run that failed: an
     employer's name replaced by an aggregator's, a shortlist of dead links, a good
-    role buried by a scoring rule that was trying to help.
+    role buried by a scoring rule that was trying to help. The one measured part
+    is the semantic skill match, and
+    <a href="https://iambraun.com/jevreports/skill-selection/">the benchmark behind it</a>
+    states its limits.
     <br><br>
     MIT licensed. Source at
     <a href="https://github.com/WorkflowtechAI/job-hunt">github.com/WorkflowtechAI/job-hunt</a>.

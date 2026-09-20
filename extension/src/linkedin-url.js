@@ -10,10 +10,10 @@
   var BAD_SLUG = /[\s/\\<>"'`]/;
 
   // Accepts any of these and returns the canonical profile URL:
-  //   david-george-braun
-  //   linkedin.com/in/david-george-braun
-  //   https://www.linkedin.com/in/david-george-braun/
-  //   https://linkedin.com/in/david-george-braun?originalSubdomain=mx
+  //   jane-q-public
+  //   linkedin.com/in/jane-q-public
+  //   https://www.linkedin.com/in/jane-q-public/
+  //   https://linkedin.com/in/jane-q-public?originalSubdomain=mx
   // Returns '' when there is nothing usable, so callers never store junk.
   function normalize(raw) {
     var s = String(raw == null ? '' : raw).trim();

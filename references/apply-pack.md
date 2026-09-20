@@ -47,7 +47,10 @@ résumés bury their best match on page two, which is the same as not having it.
 
 List every concrete term the posting names: tools, methods, certifications,
 domains, scale figures. Mark each present in the résumé, present in a different
-word, or absent.
+word, or absent. Where `jev-match.json` exists for this posting, its `wants`
+column is the semantic side of this table, the terms the posting asks for by
+describing the work rather than naming it, and the next rule still decides what
+gets added.
 
 Add only what is true. A term the person cannot defend three levels down (see
 `answer-bank.md`) gets left out no matter how well it would match, because

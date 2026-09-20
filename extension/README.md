@@ -39,9 +39,9 @@ Click the toolbar icon. Paste your profile URL, or just your slug. All of these
 land on the same answer:
 
 ```
-david-george-braun
-linkedin.com/in/david-george-braun
-https://www.linkedin.com/in/david-george-braun/?originalSubdomain=mx
+jane-q-public
+linkedin.com/in/jane-q-public
+https://www.linkedin.com/in/jane-q-public/?originalSubdomain=mx
 ```
 
 Anything that is not a personal profile is refused rather than saved, so a

@@ -111,6 +111,16 @@ and the dashboard shows it with a `?` at the top of the list rather than at the
 bottom. A run where a third of the postings come back null is a sourcing problem,
 and the handover paragraph says so.
 
+**Optional, with the person's own TypeSafe key: a semantic skill match.**
+`python <skill folder>/scripts/jev_match.py <posting.md>` asks Jev one yes/no question per
+skill in `forms.md`, whether the posting calls for it by name or by describing
+the work, and writes `jev-match.json` beside the posting: skill, `wants` from 0
+to 1, years. `wants` is evidence for the Craft and Domain and stack dimensions
+only. The score is still written here, and the other four dimensions never see
+it. Without a key the script prints one line and exits, and the posting is
+scored by the rubric exactly as before. `references/jev-selection.md` says what
+leaves the machine and how to read the numbers.
+
 ### 4. Verify every link
 
 Fetch each posting before it goes in the run.
@@ -286,19 +296,26 @@ the posted role is a poor fit.
    "it was obviously a yes." Filling forty fields and leaving the submit button
    to them is not compliance with this rule: nothing types into a form, selects
    an option, answers a screening question, or drives a browser at an
-   application. The person copies out of `forms.md` and pastes.
+   application. The person copies out of `forms.md` and pastes. `extension/` is
+   the one exception, and a deliberately small one: the person installs it
+   themselves, it runs in their browser rather than in the assistant, and it
+   fills a single field with a URL they typed into it. One field, on forms that
+   ask for it by name.
 2. **Honest claims only.** No invented projects, no borrowed client stories, no
    inflated numbers, no credentials in progress described as held. Every claim
    has to survive the interview it gets the person into.
 3. **Personal data stays local.** Everything the person owns lives in their
    folder: the profile, the CV and the master résumé, the runs, the pipeline, and
    `forms.md`, which is the most sensitive file of the set. Do not post any of it
-   anywhere.
+   anywhere. The only code that sends anything off the machine is `scripts/jev_match.py`,
+   with `scripts/jev_client.py` beside it: it sends a posting's text and the
+   skill names from `forms.md`, nothing else, and only when the person gave it
+   a key.
 4. **Never print, echo or return an API key.** Keys live in the environment, per
    `references/keyed-sources.md`, and never in `profile.md`, a run file, or the
    dashboard. When one is missing, the whole answer is "set `FOORILLA_API_KEY`
-   in your job-hunt env file", not a hunt for it. An absent key degrades to the
-   free channels silently.
+   or `TYPESAFE_API_KEY` in your job-hunt `.env`", not a hunt for it. An absent
+   key degrades to the free channels silently.
 5. **Plain language.** In anything the person reads: "searching", "found",
    "strong match", "apply". Jargon in a verdict is a small failure of respect.
 6. **Say when the search came up short.** Three real roles is a result. Twenty

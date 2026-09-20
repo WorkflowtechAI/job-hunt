@@ -26,6 +26,9 @@ types into a form.
   like a formality.
 - No browser automation pointed at an application. Not with a driver, not with an
   extension, and not by describing the clicks to something else that does them.
+  `extension/` is the one exception, and a deliberately small one: the person
+  installs it themselves, it runs in their browser rather than in the assistant,
+  and it fills a single field with a URL they typed into it.
 
 What is allowed, and useful: reading this file, telling the person which of these
 fields this particular form is going to want, naming the ones still empty,

@@ -112,6 +112,19 @@ so only your slug is left to type. A box the form labels as something else, like
 *Website* or *Social*, is left alone whatever the markup underneath it says.
 `extension/README.md` is the one-minute version.
 
+**6. Optional: a semantic skill match.** If you already have a TypeSafe key,
+set `TYPESAFE_API_KEY` in a `.env` file in your job-hunt folder, next to
+`profile.md`, and add `.env` to `.gitignore`. Then, when a posting gets scored,
+your assistant runs `scripts/jev_match.py` from where the skill is installed. It sends two
+things and nothing else: the posting's text and the skill names from your
+`forms.md`. Not your profile, not your résumé, not the self-identification
+rows. Back comes one number per skill, how much the posting wants it, written
+to `jev-match.json` beside the posting. Your assistant reads that as evidence
+for two of the six scoring dimensions and still writes the score itself.
+Without a key nothing changes: the script prints one line and exits, and
+scoring goes by the rubric as before. `references/jev-selection.md` has the
+measurement behind it, limits included.
+
 ## Week to week
 
 | Say this | You get |
@@ -155,15 +168,18 @@ so only your slug is left to type. A box the form labels as something else, like
 | `references/intake.md` | The guided intake |
 | `references/profile-template.md` | The profile it fills in |
 | `references/sourcing-map.md` | Where to look, and the rule for each channel |
+| `references/source-directory.md` | The named sources to open, 113 with a link each, and which expose a free machine-readable feed |
 | `references/scoring-rubric.md` | Six dimensions, calibration bands, what never gets filtered |
 | `references/apply-pack.md` | Adversarial fit review, tailored résumé, cover letter brief |
 | `references/resume-master.md` | The master résumé format, where tailored copies live, and how to prove one added nothing |
 | `references/compensation.md` | How to research a real salary band before answering |
 | `references/keyed-sources.md` | Optional: using a paid job-data API you already pay for |
+| `references/jev-selection.md` | Optional, and only with your own TypeSafe key: what the semantic skill match sends, how the score uses the answer, and the benchmark it rests on, limits included |
 | `references/answer-bank.md` | Reusable interview answers and the free-text form boxes |
 | `references/form-bank.md` | The fields every application form asks for, decided once and copied from |
 | `references/interview-prep.md` | Per-interview prep and the one-pager |
 | `references/contract-track.md` | Contract outreach |
+| `scripts/jev_match.py` | Optional, and the only code that sends anything off your machine: with your own TypeSafe key, sends a posting's text and your skill names to Jev and writes one number per skill to `jev-match.json`. `scripts/jev_client.py` beside it is the API call. Without a key it prints one line and exits |
 | `extension/` | Optional browser extension: fills the LinkedIn field on application forms, and nothing else |
 
 ## What it will not do
@@ -185,8 +201,11 @@ so only your slug is left to type. A box the form labels as something else, like
 - **Never ships your data anywhere of its own.** Your profile, CV, résumé, runs,
   pipeline and form answers are all files in your folder, and the dashboard uses
   browser local storage with no
-  network code in it. Your assistant still sends what it reads to its model
-  provider, so install this into one you would trust with a résumé.
+  network code in it. One opt-in exception: with your own TypeSafe key set,
+  `scripts/jev_match.py` sends a posting's text and your skill names to Jev,
+  and nothing else. Without the key it sends nothing. Your assistant still
+  sends what it reads to its model provider, so install this into one you
+  would trust with a résumé.
 - **Never links a job you have to pay to read.** Job-seeker paywalls get traced to
   the employer's posting, or dropped.
 - **Never quietly bins a role.** Unconfirmed postings are labeled unconfirmed.
@@ -210,9 +229,12 @@ Built by [David Braun](https://workflowtech.ai) for a real job and contract
 search, then generalized so it does not need to be his. The rules that look
 oddly specific are the ones that came from a run that failed: an employer's name
 replaced by an aggregator's, a shortlist of dead links, a good role buried by a
-scoring rule that was trying to help.
+scoring rule that was trying to help. The one measured part is the semantic
+skill match, and [the benchmark behind it](https://iambraun.com/jevreports/skill-selection/)
+states its limits.
 
-Everything in here is doctrine plus one HTML file. The dashboard has no
+Everything in here is doctrine, three HTML pages, and one optional script that
+says what it sends. The dashboard has no
 dependencies, no build step, and no network calls. It is one file; read it
 before you trust it with anything.
 
