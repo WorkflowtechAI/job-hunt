@@ -29,7 +29,9 @@ order. Take each named skill and write what a competent answer sounds like.
 Rank them by likelihood: the thing named first, the thing named twice, and the
 thing named in both the posting and the recruiter's email are what most of the
 hour will be about. Prepare those to L3 depth, per the term-to-defence chains in
-`answer-bank.md`, and the rest to one solid line each.
+`answer-bank.md`, and the rest to one solid line each. Where `jev-match.json`
+exists for this posting, its "wanted, and not yet held" list ranks first, and
+section 7 is where each of those gets its honest answer.
 
 ## 3. Facts to have exact
 
