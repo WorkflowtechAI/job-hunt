@@ -89,6 +89,13 @@ for version control.
   request anyway. Adding network code to either would break the one claim about
   them that is unambiguously true.
 
+A name with nothing after the equals sign is not a key. The lookup treats
+`TYPESAFE_API_KEY=`, `TYPESAFE_API_KEY=""` and a whitespace-only value as
+absent, and goes on to the next file rather than taking the next line. That
+reads like pedantry and is not: an env file holds more than one secret, and a
+lookup that can slide off its own line forwards whichever one sits below it to
+whoever the key was for.
+
 Never print, echo, or return the value either. When the variable is missing, the
 whole of the correct response is: *set `FOORILLA_API_KEY` or `TYPESAFE_API_KEY`
 in your job-hunt env file.* Do not go looking for it, do not read it back to
