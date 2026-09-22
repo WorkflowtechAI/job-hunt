@@ -42,8 +42,41 @@ def key_files():
 
 
 def have_key():
-    """True when a key is readable, without handing it to the caller."""
+    """True when a key is readable, without handing it to the caller.
+
+    Agrees with `ask()` by construction: both treat an empty value as no key,
+    because `_key()` returns None rather than "" for one.
+    """
     return _key() is not None
+
+
+# HORIZONTAL WHITESPACE ONLY, and a value that cannot be empty. The obvious
+# r"KEY\s*=\s*(.+?)\s*$" is wrong in a way that leaks: \s matches newlines, so
+# against a line reading "TYPESAFE_API_KEY=" with nothing after the equals, the
+# match walks on to the NEXT line of the file and returns it whole. Measured
+# against "TYPESAFE_API_KEY=\nOTHER_SECRET=hunter2": it returned
+# 'OTHER_SECRET=hunter2', which ask() would then put in the Authorization
+# header and send. An .env holds more than one secret, and that is the point of
+# the bug rather than a detail of it. [ \t] cannot cross a line and . never
+# matches a newline, so the value is always the one on the key's own line.
+_KEY_LINE = re.compile(
+    r"^[ \t]*(?:export[ \t]+)?TYPESAFE_API_KEY[ \t]*=[ \t]*(.*)$", re.M)
+
+
+def _from_text(text):
+    """The first line that names the key AND carries a value, or None.
+
+    Every match, not just the first: an env file edited by hand often keeps an
+    old `TYPESAFE_API_KEY=` above the real one. Stopping at the first match
+    would report no key at all while a working one sat two lines below, which
+    is a confusing failure rather than a dangerous one, and still worth not
+    having.
+    """
+    for m in _KEY_LINE.finditer(text):
+        value = m.group(1).strip().strip('"').strip("'").strip()
+        if value:
+            return value
+    return None
 
 
 def _key():
@@ -54,13 +87,19 @@ def _key():
         if not path:
             continue
         try:
-            text = io.open(path, encoding="utf-8-sig").read()
+            with io.open(path, encoding="utf-8-sig") as fh:
+                text = fh.read()
         except OSError:
             continue
-        m = re.search(r"^\s*(?:export\s+)?TYPESAFE_API_KEY\s*=\s*(.+?)\s*$",
-                      text, re.M)
-        if m:
-            return m.group(1).strip().strip('"').strip("'")
+        except ValueError:
+            # A file that is not UTF-8 raises UnicodeDecodeError, which is a
+            # ValueError and is not caught by OSError. Letting it out would
+            # break the promise every caller relies on: degrade, never raise.
+            # A file that cannot be read is a file without the key in it.
+            continue
+        found = _from_text(text)
+        if found:
+            return found
     return None
 
 
