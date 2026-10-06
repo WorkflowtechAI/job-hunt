@@ -52,6 +52,28 @@ column is the semantic side of this table, the terms the posting asks for by
 describing the work rather than naming it, and the next rule still decides what
 gets added.
 
+**Present in a different word** reaches past synonyms. A term is present when
+the résumé holds the thing under any of its names: an abbreviation for a kind of
+tool is met by a named tool of that kind (CRM by the Salesforce or HubSpot
+instance the person ran), a vendor's renamed or rebundled product by the
+product the résumé names, a feature of a platform by real work on that
+platform. Decide it by reading the résumé lines that bear on the requirement,
+never by matching letters: a term that only shares an acronym or a word with
+the résumé is absent (a SOC is not SOC 2; a data pipeline is not a sales
+pipeline).
+
+**Examples are one term.** "Frameworks such as NIST, ISO 27001, or SOC 2" is
+met by any one of them the person holds, and is absent, named as absent, only
+when none is.
+
+**Not every line is a term.** A bracket that qualifies the work ("offices across
+several regions", "policies on device handling and file storage") names nothing
+to hold. "Certification" inside a sentence about learning ("through training,
+certification, documentation") asks for no particular certification. Lines
+every employee carries ("other duties as assigned", "complete required security
+training and report incidents") are part of any job, and the table leaves them
+out.
+
 Add only what is true. A term the person cannot defend three levels down (see
 `answer-bank.md`) gets left out no matter how well it would match, because
 passing a filter into an interview that exposes it is a worse outcome than not
@@ -78,6 +100,17 @@ thing changes per posting: the long operational record is rare in a specialist
 pool, and the specialist work is rare in a generalist pool.
 
 Name the generic material too, since that is what gets cut for space.
+
+**One accomplishment answers one requirement.** Where the review lays evidence
+beside each requirement, a résumé line stands under one of them, and under a
+second only when nothing else comes close. Three requirements resting on the
+same client or the same project read as one strength, however well each pairing
+scores. Between two lines that both show the work, use the one that shows more
+of it and the one from the more recent role; an early role's duty that only
+shares a word with the requirement ("support") is the evidence only when nothing
+later shows the work. A requirement about character or values ("drive,
+teamwork, integrity") is answered by the values the person states in
+`profile.md`, where it has them.
 
 ### Lens 5: the gap hunter
 
@@ -201,7 +234,8 @@ ADDRESS DIRECTLY
 LEAVE OUT
   What the master résumé carries that this letter should not:
   the accomplishments that dilute, the terms that invite a question
-  nobody can answer, anything that reads as apology.
+  nobody can answer, the figures that decorate rather than carry a
+  claim, anything that reads as apology.
 
 MIRROR
   Words and phrases from the posting worth echoing, because they are
@@ -211,14 +245,21 @@ CLOSE
   What the invitation should offer.
 ```
 
-Two standing rules for whatever gets written from it. Every claim that can carry
-a number carries one. And compensation, engagement structure and availability
-terms stay out of the letter entirely; those go in the application's salary field
-and the first call. Research that number with `compensation.md` rather than
-improvising into a box. The rest of the form's fields come off `forms.md` rather
-than out of memory, and they get handed over for the person to paste, never
-placed: `references/form-bank.md` says why the same field answered twice from
-memory gets answered two different ways, and where the line is.
+Standing rules for whatever gets written from it. Each figure in the letter
+carries a claim (a cut, a client's size, a target raised); the rest stay in the
+résumé, because a letter that stacks every figure reads as the résumé again.
+Every sentence says something about the work or the fit, and a sentence that
+frames or announces ("the work is the point, not the title", "here is the part
+that matters") or talks about the letter itself comes out. Compensation,
+engagement structure and availability terms stay out of the letter entirely;
+those go in the application's salary field and the first call. Research that
+number with `compensation.md` rather than improvising into a box. The rest of
+the form's fields come off `forms.md` rather than out of memory, and they get
+handed over for the person to paste, never placed: `references/form-bank.md`
+says why the same field answered twice from memory gets answered two different
+ways, and where the line is. A drafted letter goes out after the person has read
+and edited it: whatever tooling wrote the prose, their edit is the last step
+before it is sent.
 
 ## From the dashboard
 

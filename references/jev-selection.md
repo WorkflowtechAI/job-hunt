@@ -64,7 +64,9 @@ per question. That is the whole request.
 Not sent: anything from `profile.md`, the résumé, the years column, the run
 file, and the four self-identification rows of `forms.md`, which the script
 never reads. The key goes in an `Authorization: Bearer` header on a request to
-`https://api.typesafe.ai/v1/systemone`. It is read from `TYPESAFE_API_KEY` in
+`https://api.typesafe.ai/v1/systemone`, and only there: if that address answers
+with a redirect, the call fails with the redirect's HTTP status instead of
+following it. It is read from `TYPESAFE_API_KEY` in
 the shell environment; failing that, from the file named by `TYPESAFE_ENV`;
 failing that, from a `.env` beside the posting or in any folder above it,
 which is how the `.env` next to `profile.md` is found; and last from `.env` in

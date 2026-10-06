@@ -103,6 +103,27 @@ def _key():
     return None
 
 
+class _NoRedirect(urllib.request.HTTPRedirectHandler):
+    """Refuses every redirect, so the key reaches ENDPOINT and no other host.
+
+    urllib's default handler copies every header except Content-Length and
+    Content-Type onto the redirected request, Authorization included,
+    whatever host it names and from https down to http. ENDPOINT answers
+    itself, and a followed 301 or 302 resends this POST as a GET without its
+    body, so no redirect here leads to a right answer. Returning None makes
+    urllib raise HTTPError with the 3xx code, which `ask()` reports as it
+    reports any other HTTP error.
+    """
+
+    def redirect_request(self, req, fp, code, msg, headers, newurl):
+        return None
+
+
+# The default handler stack with the redirect handler swapped out; proxies
+# and TLS verification behave as they do under urlopen.
+_OPENER = urllib.request.build_opener(_NoRedirect)
+
+
 def ask(state, questions, timeout=120, model=None):
     """One call, many questions, all evaluated against the same state.
 
@@ -123,7 +144,7 @@ def ask(state, questions, timeout=120, model=None):
         headers={"Authorization": "Bearer " + key,
                  "Content-Type": "application/json"})
     try:
-        with urllib.request.urlopen(req, timeout=timeout) as r:
+        with _OPENER.open(req, timeout=timeout) as r:
             payload = json.load(r)
     except urllib.error.HTTPError as e:
         return {}, {}, "HTTP %d: %s" % (e.code, e.read().decode("utf-8", "replace")[:300])
