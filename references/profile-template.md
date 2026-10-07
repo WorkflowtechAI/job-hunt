@@ -23,6 +23,14 @@ providers, support through team lead through quality operations, who now builds
 and runs production AI systems. The signature is governance in code: release
 gates, spend caps enforced at the router, evals that gate a weekly deploy."
 
+### Values (optional)
+
+The few values the person chooses work by, in their own words, one line each.
+A posting line about character ("drive, teamwork, integrity") is answered from
+here rather than from an accomplishment that happens to share a word, and a
+cover letter may open on them. Left out, those lines are scored on the record
+like any other.
+
 ## Target roles
 
 In fit order. One line each on why it fits.
