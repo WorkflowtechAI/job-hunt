@@ -133,7 +133,9 @@ Built from the master, per posting. Rules, in force order:
 
 **Reorder before rewriting.** Most of the gain is in what appears in the top
 third. Move the matching experience up, move the matching bullets to the top of
-their role, and lead the summary line with what this posting asked for.
+their role, and lead the summary line with what this posting asked for. Each
+bullet appears once: a line lifted into a summary or highlights block leaves its
+role block, so the reader meets every accomplishment a single time.
 
 **Mirror their language where it is true.** Same concept, their word.
 
